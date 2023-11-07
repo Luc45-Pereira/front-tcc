@@ -77,6 +77,12 @@ async function setEntrada(valor, descricao, tag="", detalhes="") {
     try {
         const user = await AsyncStorage.getItem('userData');
         const url = `${endpoint}/entrada?access_token=${user.token}`;
+        const dataAtual = new Date();
+
+        // Obtenha o ano, mês e dia da data atual
+        const ano = dataAtual.getFullYear();
+        const mes = String(dataAtual.getMonth() + 1).padStart(2, '0'); // Adiciona um zero à esquerda se o mês for menor que 10
+        const dia = String(dataAtual.getDate()).padStart(2, '0'); 
         const response = await fetch(url, {
             method: 'POST', // Pode ser 'GET' se o servidor esperar um GET
             headers: {
@@ -87,7 +93,7 @@ async function setEntrada(valor, descricao, tag="", detalhes="") {
                 "descricao": descricao,
                 "id_usuario": user.id,
                 "valor": valor,
-                "criado_em": "string",
+                "criado_em": `${ano}-${mes}-${dia}`,
                 "tag": tag,
                 "detalhes": detalhes
             })
