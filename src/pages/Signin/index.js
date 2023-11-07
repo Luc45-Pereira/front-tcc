@@ -37,11 +37,13 @@ export default function Signin() {
                     onChangeText={login}/>
                 <Text style={styles.title}>Senha</Text>
                 <TextInput
-                    style={styles.input}
-                    placeholder="Digite sua senha ..."
-                    autoCorrect={false}
-                    value={senha}
-                    onChangeText={password}/>
+                style={styles.input}
+                placeholder="Digite sua senha ..."
+                autoCorrect={false}
+                value={senha}
+                onChangeText={password}
+                secureTextEntry={true} // Isso mascara a entrada da senha
+            />
 
                 <TouchableOpacity style={styles.button} onPress={handleLogin}>
                     <Text style={styles.buttonText}>Entrar</Text>
@@ -51,14 +53,17 @@ export default function Signin() {
                     <Text style={styles.registerText}>Não possui uma conta? Cadastre-se</Text>
                 </TouchableOpacity>
             </Animatable.View>
+           
         </View>
     );
+    
 }
+
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#38A69D",
+        backgroundColor: "#65D8DA",
     },
     containerHeader: {
         marginTop: '14%',
@@ -80,7 +85,7 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: 20,
-        color: "#38A69D",
+        color: "#65D8DA",
         fontWeight: "bold",
         marginTop: 28,
     },
@@ -89,10 +94,10 @@ const styles = StyleSheet.create({
         height: 40,
         marginBottom: 12,
         fontSize: 16,
-        borderColor: "#38A69D",
+        borderColor: "#65D8DA",
     },
     button: {
-        backgroundColor: "#38A69D",
+        backgroundColor: "#65D8DA",
         width: '100%',
         marginTop: 14,
         borderRadius: 8,
