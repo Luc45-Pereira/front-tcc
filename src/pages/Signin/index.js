@@ -17,8 +17,8 @@ export default function Signin() {
         console.log("cheguei");
         let response = await toLogin(email, senha);
         console.log(response);
-        if (response) {
-            navigation.navigate("Welcome");
+        if (response == true) {
+            navigation.navigate("pasta");
         }
     }
     return (
