@@ -25,9 +25,11 @@ async function toLogin(login, password) {
         if (json.status === "success") {
             // Save the response data to AsyncStorage for later use
             await AsyncStorage.setItem('userData', JSON.stringify(json));
+            return true;
         }
 
-        return true;
+        return false;
+        
     } catch (error) {
         console.error(error);
         return false;
