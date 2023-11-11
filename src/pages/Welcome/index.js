@@ -13,7 +13,7 @@ export default function Welcome() {
                 <Animatable.Image 
                     animation="flipInY"
                     duration={1500}
-                    source={require("../../../assets/logo.jpeg")} 
+                    source={require("../../../assets/logo.png")} 
                     style={{width: '100%'}}
                     resizeMode="contain"
                     />
@@ -37,17 +37,17 @@ export default function Welcome() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#38A69D",
+        backgroundColor: "#65D8DA",
     },
     containerLogo: {
         flex: 2,
         justifyContent: "center",
-        backgroundColor: "#38A69D",
+        backgroundColor: "#65D8DA",
         alignItems: "center",
     },
     containerForm: {
         flex: 1,
-        backgroundColor: "#38A69D",
+        backgroundColor: "#65D8DA",
         paddingStart: '5%',
         paddingEnd: '5%',
     },

@@ -13,14 +13,14 @@ async function toLogin(login, password) {
             },
             // Não é necessário o corpo do JSON nesta configuração
         });
-        console.log(response)
+        
 
         if (!response.ok) {
             throw new Error('Network response not OK');
         }
 
         const json = await response.json();
-        console.log(json);
+        
         
         if (json.status === "success") {
             // Save the response data to AsyncStorage for later use
@@ -57,14 +57,14 @@ async function toRegister(email, password, name, birthDate, cpf) {
                 "id_endereco": null
             })
         });
-        console.log(response)
+        
 
         if (!response.ok) {
             throw new Error('Network response not OK');
         }
 
         const json = await response.json();
-        console.log(json);
+        
 
         return true;
     } catch (error) {
@@ -75,7 +75,8 @@ async function toRegister(email, password, name, birthDate, cpf) {
 
 async function setEntrada(valor, descricao, tag="", detalhes="") {
     try {
-        const user = await AsyncStorage.getItem('userData');
+        const userData = await AsyncStorage.getItem('userData');
+        const user = JSON.parse(userData);
         const url = `${endpoint}/entrada?access_token=${user.token}`;
         const response = await fetch(url, {
             method: 'POST', // Pode ser 'GET' se o servidor esperar um GET
@@ -87,19 +88,19 @@ async function setEntrada(valor, descricao, tag="", detalhes="") {
                 "descricao": descricao,
                 "id_usuario": user.id,
                 "valor": valor,
-                "criado_em": "string",
+                "criado_em": "2023-11-07",
                 "tag": tag,
                 "detalhes": detalhes
             })
         });
-        console.log(response)
+        
 
         if (!response.ok) {
             throw new Error('Network response not OK');
         }
 
         const json = await response.json();
-        console.log(json);
+        
 
         return true;
     } catch (error) {
@@ -108,7 +109,7 @@ async function setEntrada(valor, descricao, tag="", detalhes="") {
     }
 }
 
-async function setEntrada() {
+async function getEntradas() {
     try {
         const user = await AsyncStorage.getItem('userData');
         const url = `${endpoint}/entrada/${user.id}?access_token=${user.token}`;
@@ -119,14 +120,14 @@ async function setEntrada() {
                 'accept': 'application/json'
             }
         });
-        console.log(response)
+        
 
         if (!response.ok) {
             throw new Error('Network response not OK');
         }
 
         const json = await response.json();
-        console.log(json);
+        
 
         return json;
     } catch (error) {
@@ -138,4 +139,4 @@ async function setEntrada() {
 
 
 
-export { toLogin, toRegister };
+export { toLogin, toRegister, getEntradas, setEntrada };

@@ -1,12 +1,19 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
+import {styles} from '../styles';
 
-const primaryColor = '#38A69D';
+import { useNavigation } from '@react-navigation/native';
+
+const primaryColor = '#65D8DA';
 
 const Dashboard = () => {
+  const navigation = useNavigation();
   return (
     <View style={styles.container}>
+      <TouchableOpacity style={stylesMenu.button} onPress={() => navigation.navigate('profile')}>
+                    <Text style={stylesMenu.buttonText}>-</Text>
+                </TouchableOpacity>
       <Text style={styles.title}>Dashboard Financeiro</Text>
       <View style={styles.chartContainer}>
         <Text style={styles.chartTitle}>Desempenho Mensal</Text>
@@ -25,11 +32,11 @@ const Dashboard = () => {
           fromZero
           chartConfig={{
             backgroundColor: 'white',
-            backgroundGradientFrom: 'white',
-            backgroundGradientTo: 'white',
+            backgroundGradientFrom: '#65D8DA',
+            backgroundGradientTo: '#65D8DA',
             decimalPlaces: 0,
-            color: (opacity = 1) => primaryColor,
-            labelColor: (opacity = 1) => primaryColor,
+            color: (opacity = 1) => 'white',
+            labelColor: (opacity = 1) => 'white',
             propsForDots: {
               r: '6',
               strokeWidth: '2',
@@ -41,7 +48,7 @@ const Dashboard = () => {
       <View style={styles.summaryContainer}>
         <View style={styles.summaryBlock}>
           <Text style={styles.summaryLabel}>Receita Mensal</Text>
-          <Text style={styles.summaryValue}>R$ 5,000</Text>
+          <Text style={styles.summaryValue}>R$ 10,000</Text>
         </View>
         <View style={styles.summaryBlock}>
           <Text style={styles.summaryLabel}>Despesas Mensais</Text>
@@ -56,52 +63,23 @@ const Dashboard = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    backgroundColor: 'white',
-    padding: 20,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: primaryColor,
-    marginBottom: 20,
-  },
-  chartContainer: {
-    width: '100%',
-    alignItems: 'center',
-  },
-  chartTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: primaryColor,
-    marginBottom: 10,
-  },
-  summaryContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%',
-    marginTop: 20,
-  },
-  summaryBlock: {
-    width: '30%',
-    backgroundColor: primaryColor,
-    padding: 10,
-    borderRadius: 10,
-    elevation: 3,
-  },
-  summaryLabel: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    color: 'white',
-  },
-  summaryValue: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: 'white',
-  },
-});
+const stylesMenu = StyleSheet.create({
+    button: {
+        backgroundColor: "#65D8DA",
+        width: '100%',
+        marginTop: 14,
+        borderRadius: 8,
+        paddingVertical: 8,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    buttonText: {
+        color: "#FFF",
+        fontSize: 18,
+        fontWeight: "bold",
+    },
+
+})
+
 
 export default Dashboard;

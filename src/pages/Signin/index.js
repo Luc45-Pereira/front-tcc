@@ -8,21 +8,33 @@ import * as Animatable from 'react-native-animatable';
 
 import { toLogin } from '../../client/client';
 
+import {styles} from '../styles';
+
 
 export default function Signin() {
+    const [errorMessage, setErrorMessage] = useState(null);
+
     const [email, login] = useState("") //Armazenando os valores
     const [senha, password] = useState("") //Armazenando os valores
     const navigation = useNavigation();
     const handleLogin = async () => {
-        console.log("cheguei");
+        console.log("Logado");
         let response = await toLogin(email, senha);
         console.log(response);
         if (response == true) {
-            navigation.navigate("pasta");
+            navigation.navigate("dashboard");
+        }
+        else {
+            setErrorMessage("Credenciais inválidas. Por favor, tente novamente.");
         }
     }
     return (
         <View style={styles.container}>
+            {errorMessage && (
+                <View style={styles.errorMessage}>
+                    <Text style={styles.errorMessageText}>{errorMessage}</Text>
+                </View>
+            )}
             <Animatable.View delay={1000} animation="fadeInLeft" style={styles.containerHeader} >
                 <Text style={styles.message}>Signin</Text>
             </Animatable.View>
@@ -60,62 +72,3 @@ export default function Signin() {
 }
 
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: "#65D8DA",
-    },
-    containerHeader: {
-        marginTop: '14%',
-        marginBottom: '8%',
-        paddingStart: '5%',
-    },
-    message: {
-        fontSize: 32,
-        color: "#FFF",
-        fontWeight: "bold",
-    },
-    containerForm: {
-        flex: 1,
-        backgroundColor: "#FFF",
-        borderTopLeftRadius: 25,
-        borderTopRightRadius: 25,
-        paddingStart: '5%',
-        paddingEnd: '5%',
-    },
-    title: {
-        fontSize: 20,
-        color: "#65D8DA",
-        fontWeight: "bold",
-        marginTop: 28,
-    },
-    input: {
-        borderBottomWidth: 1,
-        height: 40,
-        marginBottom: 12,
-        fontSize: 16,
-        borderColor: "#65D8DA",
-    },
-    button: {
-        backgroundColor: "#65D8DA",
-        width: '100%',
-        marginTop: 14,
-        borderRadius: 8,
-        paddingVertical: 8,
-        justifyContent: "center",
-        alignItems: "center",
-    },
-    buttonText: {
-        color: "#FFF",
-        fontSize: 18,
-        fontWeight: "bold",
-    },
-    buttonRegister: {
-        marginTop: 14,
-        justifyContent: "center",
-        alignItems: "center",
-    },
-    registerText: {
-        color: "#a1a1a1",
-    },
-});
