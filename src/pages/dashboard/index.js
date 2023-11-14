@@ -3,18 +3,15 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
 import {styles} from '../styles';
 
-import { useNavigation } from '@react-navigation/native';
+import Header from '../../../components/Header';
+
 
 const primaryColor = '#65D8DA';
 
 const Dashboard = () => {
-  const navigation = useNavigation();
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={stylesMenu.button} onPress={() => navigation.navigate('profile')}>
-                    <Text style={stylesMenu.buttonText}>-</Text>
-                </TouchableOpacity>
-      <Text style={styles.title}>Dashboard Financeiro</Text>
+      <Header />
       <View style={styles.chartContainer}>
         <Text style={styles.chartTitle}>Desempenho Mensal</Text>
         <LineChart
@@ -62,24 +59,6 @@ const Dashboard = () => {
     </View>
   );
 };
-
-const stylesMenu = StyleSheet.create({
-    button: {
-        backgroundColor: "#65D8DA",
-        width: '100%',
-        marginTop: 14,
-        borderRadius: 8,
-        paddingVertical: 8,
-        justifyContent: "center",
-        alignItems: "center",
-    },
-    buttonText: {
-        color: "#FFF",
-        fontSize: 18,
-        fontWeight: "bold",
-    },
-
-})
 
 
 export default Dashboard;

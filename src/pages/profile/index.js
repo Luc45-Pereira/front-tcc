@@ -3,6 +3,7 @@ import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import {styles} from '../styles';
 import { useNavigation } from '@react-navigation/native';
 import * as Animatable from 'react-native-animatable';
+import Header from '../../../components/Header';
 
 
 
@@ -16,6 +17,7 @@ const UserProfileScreen = () => {
 
   return (
     <View style={styles.container}>
+      <Header />
         <Animatable.View delay={1000} animation="fadeInUp" style={styles.containerForm} >
             <Text style={stylesProfile.userName}>{user.name}</Text>
             <Text style={stylesProfile.userEmail}>{user.email}</Text>

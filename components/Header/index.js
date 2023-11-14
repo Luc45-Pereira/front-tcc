@@ -3,11 +3,11 @@ import {View,Text, StyleSheet, TouchableOpacity,} from 'react-native';
 import { Entypo } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
-export default function Header({screen}){
+function Header({screen}){
  const navigation = useNavigation();
   return(
 <View style={headerStyles.container}>
-<TouchableOpacity onPress={()=>navigation.toggleDrawer()}>
+<TouchableOpacity onPress={() => navigation.navigate('profile')}>
 <Entypo name="menu" size={24} color="black" />
 </TouchableOpacity>
 <View>
@@ -19,11 +19,11 @@ export default function Header({screen}){
 
 const headerStyles=StyleSheet.create({
    container:{
-       position:'absolute',
-       top:30,
+       
+       
        left:0,
        width:'100%',
-       backgroundColor:'#fa7da7',
+       backgroundColor:'#65D8DA',
        elevation:5,
        height:50,
        display:'flex',
@@ -34,3 +34,5 @@ const headerStyles=StyleSheet.create({
    }
    
 });
+
+export default Header;
