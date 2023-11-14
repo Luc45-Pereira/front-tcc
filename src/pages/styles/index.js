@@ -60,6 +60,7 @@ const styles = StyleSheet.create({
         color: "#a1a1a1",
     },
     chartContainer: {
+        marginTop: "25%",
         width: '100%',
         alignItems: 'center',
       },
@@ -118,6 +119,8 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: 'gray',
       }
+    
+
     
     });
 

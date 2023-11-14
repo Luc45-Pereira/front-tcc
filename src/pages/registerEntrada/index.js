@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, TextInput } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, TextInput, ScrollView } from "react-native";
 
 import { useNavigation } from '@react-navigation/native';
 
@@ -10,6 +10,8 @@ import MaskInput, {Masks} from 'react-native-mask-input';
 import {styles} from '../styles';
 
 import { setEntrada } from '../../client/client';
+import Header from "../../../components/Header";
+
 
 
 export default function Register() {
@@ -28,7 +30,8 @@ export default function Register() {
         }
     }
     return (
-        <View style={styles.container}>
+        <ScrollView  style={styles.container} contentContainerStyle={{ flexGrow: 1 }}>
+            <Header />
             <Animatable.View delay={1000} animation="fadeInLeft" style={styles.containerHeader} >
                 <Text style={styles.message}>Entrada</Text>
             </Animatable.View>
@@ -70,7 +73,7 @@ export default function Register() {
                 </TouchableOpacity>
 
             </Animatable.View>
-        </View>
+        </ScrollView>
     );
 }
 

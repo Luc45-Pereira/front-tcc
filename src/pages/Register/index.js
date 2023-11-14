@@ -31,7 +31,7 @@ export default function Register() {
     }
     return (
         // scroll true
-        <ScrollView style={styles.container}>
+        <ScrollView style={styles.container } contentContainerStyle={{ flexGrow: 1 }}>
         
             <Animatable.View delay={1000} animation="fadeInLeft" style={styles.containerHeader} >
                 <Text style={styles.message}>Register</Text>
