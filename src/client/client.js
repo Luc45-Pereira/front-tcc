@@ -132,10 +132,30 @@ async function getEntradas() {
             throw new Error('Network response not OK');
         }
 
-        const json = await response.json();
+        const entrada = await response.json();
         
+        const url = `${endpoint}/saida/${user.id}?access_token=${user.token}`;
+        const response = await fetch(url, {
+            method: 'POST', // Pode ser 'GET' se o servidor esperar um GET
+            headers: {
+                'Content-Type': 'application/json',
+                'accept': 'application/json'
+            }
+        });
 
-        return json;
+
+        if (!response.ok) {
+            throw new Error('Network response not OK');
+        }
+
+        const saida = await response.json();
+
+        let total_saida = saida.valor;
+        let total_entrada = entrada.valor;
+
+        let total = total_entrada - total_saida;
+
+        return total;
     } catch (error) {
         console.error(error);
         return false;
