@@ -22,9 +22,7 @@ export default function Register() {
     
     const navigation = useNavigation();
     const handleRegister = async () => {
-        console.log("cheguei");
         let response = await setEntrada(valor, descricao, tag, detalhes);
-        console.log(response);
         if (response) {
             navigation.navigate("dashboard");
         }

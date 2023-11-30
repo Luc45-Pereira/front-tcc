@@ -18,9 +18,9 @@ export default function Signin() {
     const [senha, password] = useState("") //Armazenando os valores
     const navigation = useNavigation();
     const handleLogin = async () => {
-        console.log("Logado");
+
         let response = await toLogin(email, senha);
-        console.log(response);
+
         if (response == true) {
             navigation.navigate("dashboard");
         }

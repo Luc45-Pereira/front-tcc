@@ -1,47 +1,28 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { LineChart } from 'react-native-chart-kit';
-import {styles} from '../styles';
+import React, { useEffect, useState } from 'react';
+import { View, Text } from 'react-native';
+import { styles } from '../styles';
 
 import Header from '../../../components/Header';
-
-
-const primaryColor = '#65D8DA';
+import { getEntradas } from '../../client/client';
 
 const Dashboard = () => {
+  const [saldoTotal, setSaldoTotal] = useState(0);
+
+  useEffect(() => {
+    const fetchSaldoTotal = async () => {
+      try {
+        const total = await getEntradas();
+        setSaldoTotal(total);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchSaldoTotal();
+  }, []);
   return (
     <View style={styles.container}>
       <Header />
-      <View style={styles.chartContainer}>
-        <Text style={styles.chartTitle}>Desempenho Mensal</Text>
-        <LineChart
-          data={{
-            labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'],
-            datasets: [
-              {
-                data: [50, 85, 70, 65, 90, 75],
-              },
-            ],
-          }}
-          width={350}
-          height={220}
-          yAxisSuffix="k"
-          fromZero
-          chartConfig={{
-            backgroundColor: 'white',
-            backgroundGradientFrom: '#65D8DA',
-            backgroundGradientTo: '#65D8DA',
-            decimalPlaces: 0,
-            color: (opacity = 1) => 'white',
-            labelColor: (opacity = 1) => 'white',
-            propsForDots: {
-              r: '6',
-              strokeWidth: '2',
-              stroke: primaryColor,
-            },
-          }}
-        />
-      </View>
       <View style={styles.summaryContainer}>
         <View style={styles.summaryBlock}>
           <Text style={styles.summaryLabel}>Receita Mensal</Text>
@@ -53,7 +34,7 @@ const Dashboard = () => {
         </View>
         <View style={styles.summaryBlock}>
           <Text style={styles.summaryLabel}>Saldo Mensal</Text>
-          <Text style={styles.summaryValue}>R$ 1,500</Text>
+          <Text style={styles.summaryValue}>R$ {saldoTotal},00</Text>
         </View>
       </View>
     </View>
