@@ -38,7 +38,6 @@ async function toLogin(login, password) {
 
 async function toRegister(email, password, name, birthDate, cpf) {
     try {
-        console.log(birthDate);
         let birthDateArray = birthDate.split('/');
         birthDate = `${birthDateArray[0]}-${birthDateArray[1]}-${birthDateArray[2]}`;
         const url = `${endpoint}/user`;
@@ -117,16 +116,16 @@ async function setEntrada(valor, descricao, tag="", detalhes="") {
 
 async function getEntradas() {
     try {
-        const user = await AsyncStorage.getItem('userData');
-        const url = `${endpoint}/entrada/${user.id}?access_token=${user.token}`;
+        const userData = await AsyncStorage.getItem('userData');
+        const user = JSON.parse(userData);
+        const url = `${endpoint}/entrada/entradas/${user.id}?access_token=${user.token}`;
         const response = await fetch(url, {
-            method: 'POST', // Pode ser 'GET' se o servidor esperar um GET
+            method: 'GET', // Pode ser 'GET' se o servidor esperar um GET
             headers: {
                 'Content-Type': 'application/json',
                 'accept': 'application/json'
             }
         });
-        
 
         if (!response.ok) {
             throw new Error('Network response not OK');
@@ -134,24 +133,31 @@ async function getEntradas() {
 
         const entrada = await response.json();
         
-        const url = `${endpoint}/saida/${user.id}?access_token=${user.token}`;
-        const response = await fetch(url, {
-            method: 'POST', // Pode ser 'GET' se o servidor esperar um GET
+        const url1 = `${endpoint}/saida/saidas/${user.id}?access_token=${user.token}`;
+        const response1 = await fetch(url1, {
+            method: 'GET', // Pode ser 'GET' se o servidor esperar um GET
             headers: {
                 'Content-Type': 'application/json',
                 'accept': 'application/json'
             }
         });
 
-
-        if (!response.ok) {
+        if (!response1.ok) {
             throw new Error('Network response not OK');
         }
 
-        const saida = await response.json();
+        const saida = await response1.json();
 
-        let total_saida = saida.valor;
-        let total_entrada = entrada.valor;
+        let total_entrada = 0;
+        entrada.forEach(element => {
+            total_entrada = total_entrada + element.valor;
+        });
+
+
+        let total_saida = 0;
+        saida.forEach(element => {
+            total_saida = total_saida + element.valor;
+        });
 
         let total = total_entrada - total_saida;
 
