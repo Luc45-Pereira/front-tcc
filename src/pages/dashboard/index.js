@@ -4,6 +4,7 @@ import { styles } from '../styles';
 
 import Header from '../../../components/Header';
 import { getEntradas } from '../../client/client';
+import History from './components/history';
 
 const Dashboard = () => {
   const [saldoTotal, setSaldoTotal] = useState(0);
@@ -37,6 +38,7 @@ const Dashboard = () => {
           <Text style={styles.summaryValue}>R$ {saldoTotal},00</Text>
         </View>
       </View>
+      <History />
     </View>
   );
 };

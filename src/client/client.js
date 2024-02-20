@@ -168,7 +168,31 @@ async function getEntradas() {
     }
 }
 
+async function getHistoricoDeEntradas() {
+    try {
+        const userData = await AsyncStorage.getItem('userData');
+        const user = JSON.parse(userData);
+        const url = `${endpoint}/entrada/entradas/${user.id}?access_token=${user.token}`;
+        const response = await fetch(url, {
+            method: 'GET', // Pode ser 'GET' se o servidor esperar um GET
+            headers: {
+                'Content-Type': 'application/json',
+                'accept': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response not OK');
+        }
+
+        const entrada = await response.json();
+        console.log(entrada);
+        return entrada;
+    } catch (error) {
+        console.error(error);
+        return false;
+    }
+}
 
 
-
-export { toLogin, toRegister, getEntradas, setEntrada };
+export { toLogin, toRegister, getEntradas, setEntrada, getHistoricoDeEntradas };
