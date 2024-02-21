@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { styles } from '../../../styles';
 
 import { getHistoricoDeEntradas } from '../../../../client/client';
@@ -21,9 +21,8 @@ const History = () => {
   }, []);
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>Histórico de Entradas</Text>
-      <View style={stylesTable.table}>
+    <ScrollView style={styles.container}>
+      <ScrollView style={stylesTable.table}>
         <View style={stylesTable.row}>
           <Text style={stylesTable.cell}>Data</Text>
           <Text style={stylesTable.cell}>Valor</Text>
@@ -37,8 +36,8 @@ const History = () => {
             <Text style={stylesTable.cell}>{history[key].descricao}</Text>
           </View>
         ))}
-      </View>
-    </View>
+      </ScrollView>
+    </ScrollView>
   );
 };
 

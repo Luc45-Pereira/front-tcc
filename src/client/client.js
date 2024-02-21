@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const endpoint = 'https://api-tcc-g3gr.onrender.com';
+const endpoint = 'http://18.231.163.177';
 
 async function toLogin(login, password) {
     try {
