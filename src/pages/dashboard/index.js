@@ -15,10 +15,13 @@ const Dashboard = () => {
       try {
         const total = await getEntradas();
         setSaldoTotal(total);
+        
       } catch (error) {
         console.error('Error fetching data:', error);
       }
     };
+    // transforma saldoTotal em float 2 casas decimais
+    
 
     fetchSaldoTotal();
   }, []);
@@ -36,7 +39,7 @@ const Dashboard = () => {
         </View>
         <View style={styles.summaryBlock}>
           <Text style={styles.summaryLabel}>Saldo Mensal</Text>
-          <Text style={styles.summaryValue}>R$ {saldoTotal},00</Text>
+          <Text style={styles.summaryValue}>R$ {parseFloat(saldoTotal).toFixed(2)}</Text>
         </View>
       </View>
       <Graph />

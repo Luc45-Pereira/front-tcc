@@ -32,28 +32,35 @@ const Graph = () => {
 
   return (
     <View>
-      <Text>Mês a mês</Text>
+      
       <LineChart
         data={graphData}
         width={300}
         height={200}
         yAxisSuffix="R$"
         chartConfig={{
-          backgroundColor: '#e26a00',
-          backgroundGradientFrom: '#fb8c00',
-          backgroundGradientTo: '#ffa726',
+          backgroundColor: '#65D8DA',
+          backgroundGradientFrom: '#398f88',
+          backgroundGradientTo: '#398f88',
           decimalPlaces: 2,
           color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
           labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
           style: {
-            borderRadius: 16
+            borderRadius: 16,
+            marginHorizontal: 20,
           },
           propsForDots: {
             r: '6',
             strokeWidth: '2',
-            stroke: '#ffa726'
+            stroke: '#65D8DD'
           }
         }}
+        style={{
+            marginTop: 20,
+            marginHorizontal: 20,
+            borderRadius: 10,
+            padding: 10
+            }}
       />
     </View>
   );
