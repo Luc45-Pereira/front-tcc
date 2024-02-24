@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, Dimensions } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
 import { getEntradasChart } from '../../../../client/client';
 
@@ -35,9 +35,11 @@ const Graph = () => {
       
       <LineChart
         data={graphData}
-        width={300}
-        height={200}
+        width={Dimensions.get("window").width - 50}
+        height={250}
         yAxisSuffix="R$"
+        verticalRotation={30}
+        segments={4}
         chartConfig={{
           backgroundColor: '#65D8DA',
           backgroundGradientFrom: '#398f88',
@@ -48,19 +50,24 @@ const Graph = () => {
           style: {
             borderRadius: 16,
             marginHorizontal: 20,
+            paddingRight:0
           },
+          strokeWidth: 2,
           propsForDots: {
             r: '6',
             strokeWidth: '2',
             stroke: '#65D8DD'
           }
         }}
+        bezier
         style={{
+            marginVertical: 8,
+            borderRadius: 16,
             marginTop: 20,
             marginHorizontal: 20,
-            borderRadius: 10,
-            padding: 10
-            }}
+            padding: 10,
+            paddingRight:80
+          }}
       />
     </View>
   );
