@@ -30,11 +30,7 @@ export default function Signin() {
     }
     return (
         <View style={styles.container}>
-            {errorMessage && (
-                <View style={styles.errorMessage}>
-                    <Text style={styles.errorMessageText}>{errorMessage}</Text>
-                </View>
-            )}
+            
             <Animatable.View delay={1000} animation="fadeInLeft" style={styles.containerHeader} >
                 <Text style={styles.message}>Signin</Text>
             </Animatable.View>
@@ -55,7 +51,13 @@ export default function Signin() {
                 value={senha}
                 onChangeText={password}
                 secureTextEntry={true} // Isso mascara a entrada da senha
+              
             />
+              {errorMessage && (
+                    <View style={styles.errorMessage}>
+                        <Text style={styles.errorMessageText}>{errorMessage}</Text>
+                    </View>
+                )}
 
                 <TouchableOpacity style={styles.button} onPress={handleLogin}>
                     <Text style={styles.buttonText}>Entrar</Text>

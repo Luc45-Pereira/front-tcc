@@ -25,7 +25,7 @@ const headerStyles=StyleSheet.create({
        width:'100%',
        backgroundColor:'#65D8DA',
        elevation:5,
-       height:50,
+       height:90,
        display:'flex',
        flexDirection:'row',
        paddingHorizontal:20,

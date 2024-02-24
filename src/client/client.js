@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { format, parseISO } from 'date-fns';
 
-const endpoint = 'http://18.231.163.177';
+const endpoint = 'http://15.229.78.64';
 
 async function toLogin(login, password) {
     try {
@@ -76,7 +77,7 @@ async function setEntrada(valor, descricao, tag="", detalhes="") {
     try {
         const userData = await AsyncStorage.getItem('userData');
         const user = JSON.parse(userData);
-        const url = `${endpoint}/entrada?access_token=${user.token}`;
+        const url = `http://15.229.78.64/entrada?access_token=${user.token}`;
         const dataAtual = new Date();
 
         // Obtenha o ano, mês e dia da data atual
@@ -168,6 +169,54 @@ async function getEntradas() {
     }
 }
 
+async function getEntradasChart() {
+    try {
+        const userData = await AsyncStorage.getItem('userData');
+        const user = JSON.parse(userData);
+        const url = `${endpoint}/entrada/entradas/${user.id}?access_token=${user.token}`;
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'accept': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response not OK');
+        }
+
+        const entrada = await response.json();
+
+        if (!entrada || !Array.isArray(entrada)) {
+            throw new Error('Invalid data received');
+        }
+
+        const monthlyDataEntrada = entrada.reduce((acc, entry) => {
+            const month = format(parseISO(entry.criado_em), 'yyyy-MM');
+            if (!acc[month]) {
+                acc[month] = 0;
+            }
+            acc[month] += entry.valor;
+            return acc;
+        }, {});
+
+        const chartData = {
+            labels: Object.keys(monthlyDataEntrada),
+            datasets: [
+                {
+                    data: Object.values(monthlyDataEntrada),
+                },
+            ],
+        };
+
+        return chartData;
+    } catch (error) {
+        console.error(error);
+        return false;
+    }
+}
+
 async function getHistoricoDeEntradas() {
     try {
         const userData = await AsyncStorage.getItem('userData');
@@ -195,4 +244,4 @@ async function getHistoricoDeEntradas() {
 }
 
 
-export { toLogin, toRegister, getEntradas, setEntrada, getHistoricoDeEntradas };
+export { toLogin, toRegister, getEntradas, setEntrada, getHistoricoDeEntradas, getEntradasChart };

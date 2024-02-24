@@ -96,8 +96,9 @@ const styles = StyleSheet.create({
       errorMessage: {
         backgroundColor: 'red',
         padding: 10,
-        borderRadius: 5,
+        borderRadius: 30,
         marginVertical: 10,
+
     },
     errorMessageText: {
         color: 'white',
