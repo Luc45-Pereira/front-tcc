@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { format, parseISO } from 'date-fns';
 
-const endpoint = 'http://15.229.78.64';
+const endpoint = 'http://34.85.214.156';
 
 async function toLogin(login, password) {
     try {
@@ -77,7 +77,7 @@ async function setEntrada(valor, descricao, tag="", detalhes="") {
     try {
         const userData = await AsyncStorage.getItem('userData');
         const user = JSON.parse(userData);
-        const url = `http://15.229.78.64/entrada?access_token=${user.token}`;
+        const url = `http://34.85.214.156/entrada/?access_token=${user.token}`;
         const dataAtual = new Date();
 
         // Obtenha o ano, mês e dia da data atual
@@ -90,6 +90,7 @@ async function setEntrada(valor, descricao, tag="", detalhes="") {
                 'Content-Type': 'application/json',
                 'accept': 'application/json'
             },
+            redirect: 'manual',
             body: JSON.stringify({
                 "descricao": descricao,
                 "id_usuario": user.id,
