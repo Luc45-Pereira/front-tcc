@@ -77,7 +77,7 @@ async function setEntrada(valor, descricao, tag="", detalhes="") {
     try {
         const userData = await AsyncStorage.getItem('userData');
         const user = JSON.parse(userData);
-        const url = `http://34.85.214.156/entrada/?access_token=${user.token}`;
+        const url = `http://34.85.214.156/entrada/a?access_token=${user.token}`;
         const dataAtual = new Date();
 
         // Obtenha o ano, mês e dia da data atual
