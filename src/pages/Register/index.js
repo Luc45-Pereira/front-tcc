@@ -22,9 +22,7 @@ export default function Register() {
 
     const navigation = useNavigation();
     const handleRegister = async () => {
-        console.log("cheguei");
         let response = await toRegister(email, senha, nome, dataNascimento, cpf);
-        console.log(response);
         if (response) {
             navigation.navigate("SignIn");
         }

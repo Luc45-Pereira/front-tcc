@@ -15,6 +15,7 @@ const styles = StyleSheet.create({
         fontSize: 32,
         color: "#FFF",
         fontWeight: "bold",
+        marginTop: '20%',
     },
     containerForm: {
         flex: 1,
@@ -23,6 +24,7 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 25,
         paddingStart: '5%',
         paddingEnd: '5%',
+        marginTop: '10%',
     },
     title: {
         fontSize: 20,
@@ -119,7 +121,11 @@ const styles = StyleSheet.create({
       userEmail: {
         fontSize: 16,
         color: 'gray',
-      }
+      },
+      passwordContainer: {
+        position: 'relative',
+        arginBottom: 10,
+      },
     
 
     
