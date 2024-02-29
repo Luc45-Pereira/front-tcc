@@ -50,7 +50,7 @@ export default function Signin() {
                         secureTextEntry={!showPassword}
                     />
                     <TouchableOpacity style={styles.eyeIcon} onPress={() => setShowPassword(!showPassword)}>
-                        <Icon name={showPassword ? 'eye-off' : 'eye'} size={24} color="#333" />
+                        <Icon name={showPassword ? 'eye-off' : 'eye'} size={24} color="#65D8DA" />
                     </TouchableOpacity>
                 </View>
 

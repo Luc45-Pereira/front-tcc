@@ -126,6 +126,15 @@ const styles = StyleSheet.create({
         position: 'relative',
         arginBottom: 10,
       },
+      eyeIcon: {
+        position: 'absolute',
+        right: 10,
+        top: 10,
+        
+      },
+      showPasswordButton: {
+        visibility: 'hidden'
+      }
     
 
     
