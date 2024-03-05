@@ -15,6 +15,7 @@ const styles = StyleSheet.create({
         fontSize: 32,
         color: "#FFF",
         fontWeight: "bold",
+        marginTop: '20%',
     },
     containerForm: {
         flex: 1,
@@ -23,6 +24,7 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 25,
         paddingStart: '5%',
         paddingEnd: '5%',
+        marginTop: '10%',
     },
     title: {
         fontSize: 20,
@@ -50,11 +52,12 @@ const styles = StyleSheet.create({
         color: "#FFF",
         fontSize: 18,
         fontWeight: "bold",
+        
     },
     buttonRegister: {
         marginTop: 14,
         justifyContent: "center",
-        alignItems: "center",
+        
     },
     registerText: {
         color: "#a1a1a1",
@@ -119,6 +122,19 @@ const styles = StyleSheet.create({
       userEmail: {
         fontSize: 16,
         color: 'gray',
+      },
+      passwordContainer: {
+        position: 'relative',
+        arginBottom: 10,
+      },
+      eyeIcon: {
+        position: 'absolute',
+        right: 10,
+        top: 10,
+        
+      },
+      showPasswordButton: {
+        visibility: 'hidden'
       }
     
 

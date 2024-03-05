@@ -77,7 +77,7 @@ async function setEntrada(valor, descricao, tag="", detalhes="") {
     try {
         const userData = await AsyncStorage.getItem('userData');
         const user = JSON.parse(userData);
-        const url = `http://34.85.214.156/entrada/a?access_token=${user.token}`;
+        const url = `http://34.85.214.156/entrada/?access_token=${user.token}`;
         const dataAtual = new Date();
 
         // Obtenha o ano, mês e dia da data atual
@@ -244,5 +244,32 @@ async function getHistoricoDeEntradas() {
     }
 }
 
+async function getUser() {
+    try {
+        const userData = await AsyncStorage.getItem('userData');
+        const user = JSON.parse(userData);
+        const url = `${endpoint}/user/${user.id}?access_token=${user.token}`;
+        const response = await fetch(url, {
+            method: 'GET', // Pode ser 'GET' se o servidor esperar um GET
+            headers: {
+                'Content-Type': 'application/json',
+                'accept': 'application/json'
+            }
+        });
 
-export { toLogin, toRegister, getEntradas, setEntrada, getHistoricoDeEntradas, getEntradasChart };
+        if (!response.ok) {
+            throw new Error('Network response not OK');
+        }
+        return await response.json();
+
+
+
+       
+    } catch (error) {
+        console.error(error);
+        return false;
+    }
+}
+
+
+export { toLogin, toRegister, getEntradas, setEntrada, getHistoricoDeEntradas, getEntradasChart, getUser};
