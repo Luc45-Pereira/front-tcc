@@ -52,11 +52,12 @@ const styles = StyleSheet.create({
         color: "#FFF",
         fontSize: 18,
         fontWeight: "bold",
+        
     },
     buttonRegister: {
         marginTop: 14,
         justifyContent: "center",
-        alignItems: "center",
+        
     },
     registerText: {
         color: "#a1a1a1",
