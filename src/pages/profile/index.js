@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import firebase from 'firebase/app';
-import 'firebase/database';
 import * as Animatable from 'react-native-animatable';
 import Header from '../../../components/Header';
 import { styles } from '../styles'; // Importe seus estilos aqui

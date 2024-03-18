@@ -4,7 +4,7 @@ const primaryColor = '#FFF';
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#65D8DA",
+        backgroundColor: "#FFF",
     },
     containerHeader: {
         marginTop: '14%',

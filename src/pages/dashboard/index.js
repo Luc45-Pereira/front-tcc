@@ -7,6 +7,10 @@ import { getEntradas } from '../../client/client';
 import History from './components/history';
 import Graph from './components/graph';
 
+import HeaderDash from './components/Header';
+import Card from './components/card';
+import Values from './components/values';
+
 const Dashboard = () => {
   const [saldoTotal, setSaldoTotal] = useState(0);
   const [receitaMensal, setReceitaMensal] = useState(10000);
@@ -54,22 +58,9 @@ const Dashboard = () => {
         />
       }
     >
-      <Header />
-      <View style={styles.summaryContainer}>
-        <View style={styles.summaryBlock}>
-          <Text style={styles.summaryLabel}>Receita Mensal</Text>
-          <Text style={styles.summaryValue}>R$ {receitaMensal.toFixed(2)}</Text>
-        </View>
-        <View style={styles.summaryBlock}>
-          <Text style={styles.summaryLabel}>Despesas Mensais</Text>
-          <Text style={styles.summaryValue}>R$ {despesasMensais.toFixed(2)}</Text>
-        </View>
-        <View style={styles.summaryBlock}>
-          <Text style={styles.summaryLabel}>Saldo Mensal</Text>
-          <Text style={styles.summaryValue}>R$ {parseFloat(saldoTotal).toFixed(2)}</Text>
-        </View>
-      </View>
-      <Graph />
+      <HeaderDash />
+      <Card />
+      <Values />
       <History />
     </ScrollView>
   );
