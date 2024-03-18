@@ -236,8 +236,38 @@ async function getHistoricoDeEntradas() {
         }
 
         const entrada = await response.json();
-        console.log(entrada);
-        return entrada;
+
+        const url1 = `${endpoint}/saida/saidas/${user.id}?access_token=${user.token}`;
+        const response1 = await fetch(url1, {
+            method: 'GET', // Pode ser 'GET' se o servidor esperar um GET
+            headers: {
+                'Content-Type': 'application/json',
+                'accept': 'application/json'
+            }
+        });
+
+        if (!response1.ok) {
+            throw new Error('Network response not OK');
+        }
+
+        const saida = await response1.json();
+
+        let entradasDoMes = entrada.filter(entrada => {
+            const data = new Date(entrada.criado_em);
+            const dataAtual = new Date();
+            return data.getMonth() === dataAtual.getMonth() && data.getFullYear() === dataAtual.getFullYear();
+        });
+
+        let saidasDoMes = saida.filter(saida => {
+            const data = new Date(saida.criado_em);
+            const dataAtual = new Date();
+            return data.getMonth() === dataAtual.getMonth() && data.getFullYear() === dataAtual.getFullYear();
+        });
+
+        let valoresMensal = entradasDoMes.concat(saidasDoMes);
+
+        console.log(valoresMensal);
+        return valoresMensal;
     } catch (error) {
         console.error(error);
         return false;

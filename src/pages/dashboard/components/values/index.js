@@ -6,8 +6,8 @@ import { getEntradas, getSaidasMensal, getEntradasMensal } from '../../../../cli
 const Values = () => {
 
     const [saldoTotal, setSaldoTotal] = useState(0);
-  const [receitaMensal, setReceitaMensal] = useState(10000);
-  const [despesasMensais, setDespesasMensais] = useState(3500);
+  const [receitaMensal, setReceitaMensal] = useState(0);
+  const [despesasMensais, setDespesasMensais] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
