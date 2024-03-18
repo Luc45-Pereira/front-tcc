@@ -271,5 +271,72 @@ async function getUser() {
     }
 }
 
+async function getSaidasMensal() {
+    try {
+        const userData = await AsyncStorage.getItem('userData');
+        const user = JSON.parse(userData);
+        const url = `${endpoint}/saida/saidas/${user.id}?access_token=${user.token}`;
+        const response = await fetch(url, {
+            method: 'GET', // Pode ser 'GET' se o servidor esperar um GET
+            headers: {
+                'Content-Type': 'application/json',
+                'accept': 'application/json'
+            }
+        });
 
-export { toLogin, toRegister, getEntradas, setEntrada, getHistoricoDeEntradas, getEntradasChart, getUser};
+        if (!response.ok) {
+            throw new Error('Network response not OK');
+        }
+
+        const saidas = await response.json();
+
+        let saidasDoMes = saidas.filter(saida => {
+            const data = new Date(saida.criado_em);
+            const dataAtual = new Date();
+            return data.getMonth() === dataAtual.getMonth() && data.getFullYear() === dataAtual.getFullYear();
+        });
+
+        let totalDespesas = saidasDoMes.reduce((acc, saida) => acc + saida.valor, 0);
+
+        return totalDespesas;
+    } catch (error) {
+        console.error(error);
+        return false;
+    }
+}
+
+async function getEntradasMensal() {
+    try {
+        const userData = await AsyncStorage.getItem('userData');
+        const user = JSON.parse(userData);
+        const url = `${endpoint}/entrada/entradas/${user.id}?access_token=${user.token}`;
+        const response = await fetch(url, {
+            method: 'GET', // Pode ser 'GET' se o servidor esperar um GET
+            headers: {
+                'Content-Type': 'application/json',
+                'accept': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response not OK');
+        }
+
+        const entradas = await response.json();
+
+        let entradasDoMes = entradas.filter(saida => {
+            const data = new Date(saida.criado_em);
+            const dataAtual = new Date();
+            return data.getMonth() === dataAtual.getMonth() && data.getFullYear() === dataAtual.getFullYear();
+        });
+
+        let totalEntradas = entradasDoMes.reduce((acc, saida) => acc + saida.valor, 0);
+
+        return totalEntradas;
+    } catch (error) {
+        console.error(error);
+        return false;
+    }
+}
+
+export { toLogin, toRegister, getEntradas, setEntrada, getHistoricoDeEntradas, getEntradasChart, getUser, getSaidasMensal, getEntradasMensal };

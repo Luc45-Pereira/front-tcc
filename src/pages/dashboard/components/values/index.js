@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { getEntradas } from '../../../../client/client';
+import { getEntradas, getSaidasMensal, getEntradasMensal } from '../../../../client/client';
 
 const Values = () => {
 
@@ -40,19 +40,46 @@ const Values = () => {
     setRefreshing(false);
   };
 
+  useEffect(() => {
+    const fetchEntradasMensais = async () => {
+      try {
+        const total = await getEntradasMensal();
+        setReceitaMensal(total);
+        
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    }
+    fetchEntradasMensais();
+  }, []);
+
+
+  useEffect(() => {
+    const fetchDespesasMensais = async () => {
+      try {
+        const total = await getSaidasMensal();
+
+        setDespesasMensais(total);
+        
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    }
+    fetchDespesasMensais();
+  }, []);
 
 
   return (
     <View>
         <View style={styles.container}>
             <View style={styles.square}>
-                <Icon name="arrow-up" size={30} color="#b5b3b3" />
+                <Icon name="arrow-up" size={30} color="green" />
             </View>
-            <Text style={styles.value}>R$ 3,227</Text>
+            <Text style={styles.value}>R$ {parseFloat(receitaMensal).toFixed(2)}</Text>
             <View style={styles.square}>
-                <Icon name="arrow-down" size={30} color="#b5b3b3" />
+                <Icon name="arrow-down" size={30} color="red" />
             </View>
-            <Text style={styles.value}>R$ 6,333</Text>
+            <Text style={styles.value}>R$ {parseFloat(despesasMensais).toFixed(2)}</Text>
         </View>
         
     </View>

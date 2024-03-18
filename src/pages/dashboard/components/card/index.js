@@ -4,9 +4,7 @@ import { getEntradas } from '../../../../client/client';
 
 const Card = () => {
 
-    const [saldoTotal, setSaldoTotal] = useState(0);
-  const [receitaMensal, setReceitaMensal] = useState(10000);
-  const [despesasMensais, setDespesasMensais] = useState(3500);
+  const [saldoTotal, setSaldoTotal] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
@@ -21,12 +19,6 @@ const Card = () => {
     };
     fetchSaldoTotal();
   }, []);
-
-  useEffect(() => {
-    // Atualiza o saldo mensal ao alterar o saldo total, receita mensal ou despesas mensais
-    const saldoMensal = receitaMensal - despesasMensais;
-    setSaldoTotal(saldoMensal);
-  }, [receitaMensal, despesasMensais]);
 
   const onRefresh = async () => {
     setRefreshing(true);
