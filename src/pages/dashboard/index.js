@@ -10,6 +10,7 @@ import Graph from './components/graph';
 import HeaderDash from './components/Header';
 import Card from './components/card';
 import Values from './components/values';
+import BottomMenu from '../menu';
 
 const Dashboard = () => {
   const [saldoTotal, setSaldoTotal] = useState(0);
@@ -48,21 +49,21 @@ const Dashboard = () => {
   };
 
   return (
-    <ScrollView
-      style={styles.container}
-      contentContainerStyle={{ flexGrow: 1 }}
-      refreshControl={
-        <RefreshControl
-          refreshing={refreshing}
-          onRefresh={onRefresh}
-        />
-      }
-    >
-      <HeaderDash />
-      <Card />
-      <Values />
-      <History />
-    </ScrollView>
+    <View style={styles.container}>
+      <ScrollView
+        
+        contentContainerStyle={{ flexGrow: 1 }}
+       
+      >
+        <HeaderDash />
+        <Card />
+        <Values />
+        <History />
+        
+      </ScrollView>
+      <BottomMenu />
+    </View>
+    
   );
 };
 

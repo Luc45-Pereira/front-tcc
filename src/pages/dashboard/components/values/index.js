@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { View, Text, StyleSheet, Image, RefreshControl } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { getEntradas, getSaidasMensal, getEntradasMensal } from '../../../../client/client';
 
@@ -32,8 +32,18 @@ const Values = () => {
   const onRefresh = async () => {
     setRefreshing(true);
     try {
-      const total = await getEntradas();
-      setSaldoTotal(total);
+      const total = await getEntradasMensal();
+      setReceitaMensal(total);
+      
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+
+    try {
+      const total = await getSaidasMensal();
+
+      setDespesasMensais(total);
+      
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -72,7 +82,12 @@ const Values = () => {
   return (
     <View>
         <View style={styles.container}>
-            <View style={styles.square}>
+            <View style={styles.square} refreshControl={
+      <RefreshControl
+        refreshing={refreshing}
+        onRefresh={onRefresh}
+      />
+    }>
                 <Icon name="arrow-up" size={30} color="green" />
             </View>
             <Text style={styles.value}>R$ {parseFloat(receitaMensal).toFixed(2)}</Text>

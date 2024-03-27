@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { View, Text, StyleSheet, Image, RefreshControl } from 'react-native';
 import { getEntradas } from '../../../../client/client';
 
 const Card = () => {
@@ -34,7 +34,12 @@ const Card = () => {
 
 
   return (
-    <View style={styles.card}>
+    <View style={styles.card} refreshControl={
+      <RefreshControl
+        refreshing={refreshing}
+        onRefresh={onRefresh}
+      />
+    }>
       <Image  style={styles.image} />
       <View style={styles.cardContent}>
         <Text style={styles.title}>Saldo</Text>
@@ -48,10 +53,11 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: '#6f59f0',
     borderRadius: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
+    boxShadowColor: '#000',
+
+    boxShadowOffset: { width: 0, height: 2 },
+    boxShadowOpacity: 0.25,
+    boxShadowRadius: 3.84,
     elevation: 5,
     marginBottom: 20,
     marginHorizontal: 20,

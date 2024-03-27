@@ -116,6 +116,50 @@ async function setEntrada(valor, descricao, tag="", detalhes="") {
     }
 }
 
+
+async function setSaida(valor, descricao, tag="", detalhes="") {
+    try {
+        const userData = await AsyncStorage.getItem('userData');
+        const user = JSON.parse(userData);
+        const url = `http://34.85.214.156/saida/?access_token=${user.token}`;
+        const dataAtual = new Date();
+
+        // Obtenha o ano, mês e dia da data atual
+        const ano = dataAtual.getFullYear();
+        const mes = String(dataAtual.getMonth() + 1).padStart(2, '0'); // Adiciona um zero à esquerda se o mês for menor que 10
+        const dia = String(dataAtual.getDate()).padStart(2, '0'); 
+        const response = await fetch(url, {
+            method: 'POST', // Pode ser 'GET' se o servidor esperar um GET
+            headers: {
+                'Content-Type': 'application/json',
+                'accept': 'application/json'
+            },
+            redirect: 'manual',
+            body: JSON.stringify({
+                "descricao": descricao,
+                "id_usuario": user.id,
+                "valor": valor,
+                "criado_em": `${ano}-${mes}-${dia}`,
+                "tag": tag,
+                "detalhes": detalhes
+            })
+        });
+        
+
+        if (!response.ok) {
+            throw new Error('Network response not OK');
+        }
+
+        const json = await response.json();
+        
+
+        return true;
+    } catch (error) {
+        console.error(error);
+        return false;
+    }
+}
+
 async function getEntradas() {
     try {
         const userData = await AsyncStorage.getItem('userData');
@@ -369,4 +413,4 @@ async function getEntradasMensal() {
     }
 }
 
-export { toLogin, toRegister, getEntradas, setEntrada, getHistoricoDeEntradas, getEntradasChart, getUser, getSaidasMensal, getEntradasMensal };
+export { toLogin, toRegister, getEntradas, setEntrada, getHistoricoDeEntradas, getEntradasChart, getUser, getSaidasMensal, getEntradasMensal, setSaida };

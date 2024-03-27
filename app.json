@@ -6,7 +6,6 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
-    
     "assetBundlePatterns": [
       "**/*"
     ],
@@ -16,7 +15,6 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon.png"
-        
       },
       "package": "com.anonymous.fronttcc"
     },
@@ -25,8 +23,9 @@
     },
     "extra": {
       "eas": {
-        "projectId": "bb74df83-d2d2-4c73-8493-dcbcc406c9c2"
+        "projectId": "744dd723-07e9-400a-ad62-98fad7dbd47c"
       }
-    }
+    },
+    "owner": "luc45-pereira"
   }
 }

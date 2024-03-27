@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView, RefreshControl } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import { getHistoricoDeEntradas } from '../../../../client/client';
 import { styles } from '../../../styles';
@@ -8,6 +8,7 @@ import { useNavigation } from '@react-navigation/native';
 const History = () => {
   const navigation = useNavigation();
   const [history, setHistory] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     const fetchHistory = async () => {
@@ -22,8 +23,24 @@ const History = () => {
     fetchHistory();
   }, []);
 
+  const onRefresh = async () => {
+    setRefreshing(true);
+    try {
+      const historico = await getHistoricoDeEntradas();
+      setHistory(historico);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+    setRefreshing(false);
+  };
+
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={styles.container} refreshControl={
+      <RefreshControl
+        refreshing={refreshing}
+        onRefresh={onRefresh}
+      />
+    }>
       <ScrollView style={stylesTable.table}>
         <View style={stylesTable.containerButton}>
           <Text style={stylesTable.title}>Transações</Text>

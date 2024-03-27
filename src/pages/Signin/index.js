@@ -25,12 +25,18 @@ export default function Signin() {
     }
 
     return (
-        <View style={styles.container}>
-            <Animatable.View delay={1000} animation="fadeInLeft" style={styles.containerHeader}>
-                <Text style={styles.message}>Signin</Text>
-            </Animatable.View>
+        <View style={styles.containerForm}>
+             <View >
+                <Animatable.Image 
+                    animation="flipInY"
+                    duration={1500}
+                    source={require("../../../assets/logo.png")} 
+                    style={{width: '100%'}}
+                    resizeMode="contain"
+                    />
+            </View>
 
-            <Animatable.View delay={1000} animation="fadeInUp" style={styles.containerForm}>
+            <Animatable.View delay={1000} animation="fadeInUp" >
                 <Text style={styles.title}>Login</Text>
                 <TextInput
                     style={styles.input}

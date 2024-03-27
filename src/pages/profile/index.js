@@ -5,6 +5,7 @@ import * as Animatable from 'react-native-animatable';
 import Header from '../../../components/Header';
 import { styles } from '../styles'; // Importe seus estilos aqui
 import { getUser } from '../../client/client';
+import BottomMenu from '../menu';
 
 
 
@@ -24,13 +25,13 @@ const stylesProfile = StyleSheet.create({
         fontSize: 24,
         fontWeight: 'bold',
         // alinha topo
-        textAlignVertical: 'top',
+        verticalAlign: 'top',
         height:30,
         marginTop: 50,
     },
     userEmail: {
       fontSize: 17,
-        textAlignVertical: 'top',
+        verticalAlign: 'top',
         height:50,
         marginTop: 0,
     },
@@ -78,7 +79,6 @@ const UserProfileScreen = () => {
 
     return (
         <View style={styles.container } contentContainerStyle={{ flexGrow: 1 }}>
-            <Header />
             <Animatable.View delay={1000} animation="fadeInUp" style={styles.containerForm} >
                 <Text style={stylesProfile.userName}>{userData ? userData.nome : 'Carregando...'}</Text>
                 <Text style={stylesProfile.userEmail}>{userData ? userData.email : 'Carregando...'}</Text>
@@ -87,6 +87,7 @@ const UserProfileScreen = () => {
                     <Text style={stylesProfile.buttonText}>Cadastrar Entrada</Text>
                 </TouchableOpacity>
             </Animatable.View>
+            <BottomMenu />
         </View>
     );
 };

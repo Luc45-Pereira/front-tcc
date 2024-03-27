@@ -4,6 +4,7 @@ const primaryColor = '#FFF';
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        // zIndex: 99999,
         backgroundColor: "#FFF",
     },
     containerHeader: {
@@ -20,11 +21,9 @@ const styles = StyleSheet.create({
     containerForm: {
         flex: 1,
         backgroundColor: "#FFF",
-        borderTopLeftRadius: 25,
-        borderTopRightRadius: 25,
         paddingStart: '5%',
         paddingEnd: '5%',
-        marginTop: '10%',
+        marginTop: '20%',
     },
     title: {
         fontSize: 20,
@@ -42,25 +41,27 @@ const styles = StyleSheet.create({
     button: {
         backgroundColor: "#65D8DA",
         width: '100%',
-        marginTop: 14,
+        // marginTop: 14,
         borderRadius: 8,
         paddingVertical: 8,
+        height: 40,
         justifyContent: "center",
         alignItems: "center",
     },
     buttonText: {
-        color: "#FFF",
+        color: "#000",
         fontSize: 18,
         fontWeight: "bold",
         
     },
     buttonRegister: {
-        marginTop: 14,
+        marginTop: 30,
         justifyContent: "center",
-        
+        // zIndex: 99999,
     },
     registerText: {
-        color: "#a1a1a1",
+        color: "#000",
+        // zIndex: 99999,
     },
     chartContainer: {
         marginTop: "25%",
@@ -125,7 +126,7 @@ const styles = StyleSheet.create({
       },
       passwordContainer: {
         position: 'relative',
-        arginBottom: 10,
+        marginBottom: "20%",
       },
       eyeIcon: {
         position: 'absolute',
