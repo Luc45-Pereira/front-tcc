@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, TextInput, StyleSheet } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 import * as Animatable from 'react-native-animatable';
 import Icon from 'react-native-vector-icons/Feather'; // Importe o ícone
-import { toLogin } from '../../client/client';
+import { toLogin, getUser } from '../../client/client';
 import { styles } from '../styles';
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Signin() {
     const [errorMessage, setErrorMessage] = useState(null);
@@ -24,8 +26,24 @@ export default function Signin() {
         }
     }
 
+    const login = async () => {
+        const userData = await AsyncStorage.getItem('userData');
+
+        if (userData) {
+            try {
+                let response = await getUser();
+                if (response) {
+                    navigation.navigate("dashboard");
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        }
+    }
+
+    login();
     return (
-        <View style={styles.containerForm}>
+        <View style={styles.containerFormSignin}>
              <View >
                 <Animatable.Image 
                     animation="flipInY"

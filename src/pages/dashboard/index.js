@@ -51,9 +51,7 @@ const Dashboard = () => {
   return (
     <View style={styles.container}>
       <ScrollView
-        
         contentContainerStyle={{ flexGrow: 1 }}
-       
       >
         <HeaderDash />
         <Card />

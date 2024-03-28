@@ -1,3 +1,4 @@
+import ModalSelector from 'react-native-modal-selector';
 import React from "react";
 import { useState, useEffect } from 'react';
 import { View, Text, Picker, StyleSheet, TouchableOpacity, TextInput, ScrollView } from "react-native";
@@ -7,6 +8,8 @@ import { useNavigation } from '@react-navigation/native';
 import * as Animatable from 'react-native-animatable';
 
 import MaskInput, {Masks} from 'react-native-mask-input';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+// import RNPickerSelect from 'react-native-picker-select';
 import {styles} from '../styles';
 
 
@@ -14,14 +17,13 @@ import { setEntrada, setSaida } from '../../client/client';
 import Header from "../../../components/Header";
 import BottomMenu from "../menu";
 
-
-
 export default function Register() {
-    const [descricao, Descricao] = useState("") //Armazenando os valores
-    const [valor, Valor] = useState("") //Armazenando os valores
-    const [tag, Tag] = useState("") //Armazenando os valores
-    const [detalhes, Detalhes] = useState("") //Armazenando os valores
-    const [selectedOption, setSelectedOption] = useState(''); // Estado para armazenar a opção selecionada
+    const [descricao, Descricao] = useState("");
+    const [valor, Valor] = useState("");
+    const [tag, Tag] = useState("");
+    const [detalhes, Detalhes] = useState("");
+    const [selectedOption, setSelectedOption] = useState('entrada');
+    const [selectedIcon, setSelectedIcon] = useState();
 
     // Função para definir a opção como 'entrada'
     const selectEntrada = () => {
@@ -34,17 +36,25 @@ export default function Register() {
     };
     
     const navigation = useNavigation();
+
     const handleRegister = async () => {
         let response;
         if (selectedOption === "saída") {
-            response = await setSaida(valor, descricao, tag, detalhes);
+            response = await setSaida(valor, descricao, selectedIcon, detalhes);
         } else {
-            response = await setEntrada(valor, descricao, tag, detalhes);
+            response = await setEntrada(valor, descricao, selectedIcon, detalhes);
         }
         if (response) {
             navigation.navigate("dashboard");
         }
     }
+
+    const iconOptions = [
+        { label: 'Compra', key: 'shopping-outline' },
+        { label: 'Cofre', key: 'piggy-bank-outline' },
+        { label: 'Transferência', key: 'bank-transfer' },
+        // Adicione mais ícones conforme necessário
+    ];
 
     const stylesOptions = StyleSheet.create({
         container: {
@@ -73,7 +83,6 @@ export default function Register() {
     return (
         <View style={styles.container}>
             <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-
                 <Animatable.View delay={1000} animation="fadeInUp" style={styles.containerForm} >
                     <Text style={styles.title}>Valor</Text>
                     <TextInput
@@ -99,12 +108,19 @@ export default function Register() {
                         value={descricao}
                         onChangeText={Descricao}/>
                     <Text style={styles.title}>Tag</Text>
-                    <TextInput
+                    {/* <TextInput
                         style={styles.input}
                         placeholder="Digite uma Tag..."
                         autoCorrect={false}
                         value={tag}
-                        onChangeText={Tag}/>
+                        onChangeText={Tag}/> */}
+                    {selectedIcon && <Icon name={selectedIcon} size={30} />}
+                    <ModalSelector
+                        data={iconOptions}
+                        initValue="Selecione um ícone"
+                        onChange={(option) => setSelectedIcon(option.key)}
+                        cancelText="Cancelar"
+                    />
                     <Text style={styles.title}>Detalhes</Text>
                     <MaskInput
                         style={styles.input}

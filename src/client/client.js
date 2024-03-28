@@ -32,7 +32,7 @@ async function toLogin(login, password) {
         return false;
         
     } catch (error) {
-        console.error(error);
+        // console.error(error);
         return false;
     }
 }
@@ -321,6 +321,9 @@ async function getHistoricoDeEntradas() {
 async function getUser() {
     try {
         const userData = await AsyncStorage.getItem('userData');
+        if (!userData) {
+            return false;
+        }
         const user = JSON.parse(userData);
         const url = `${endpoint}/user/${user.id}?access_token=${user.token}`;
         const response = await fetch(url, {
@@ -340,7 +343,7 @@ async function getUser() {
 
        
     } catch (error) {
-        console.error(error);
+        // console.error(error);
         return false;
     }
 }

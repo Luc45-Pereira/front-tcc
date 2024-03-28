@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView, RefreshControl } from 'react-native';
-import Icon from 'react-native-vector-icons/Feather';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { getHistoricoDeEntradas } from '../../../../client/client';
 import { styles } from '../../../styles';
 import { useNavigation } from '@react-navigation/native';
@@ -53,9 +53,9 @@ const History = () => {
           <View key={index} style={stylesTable.row}>
             <View style={stylesTable.transactionInfo}>
               <View style={stylesTable.iconCircle}>
-                <Icon name="shopping-bag" size={30} color="#b5b3b3" />
+                <Icon name={history[key].tag} size={30} color="#b5b3b3" />
               </View>
-              <Text style={stylesTable.transactionDescription}>{history[key].descricao}</Text>
+              <Text style={stylesTable.transactionDescription}>{ history[key].descricao.length <= 15 ? history[key].descricao : history[key].descricao.substring(0, 15) + '...' }</Text>
             </View>
             <View style={stylesTable.transactionDetails}>
               <Text style={stylesTable.transactionValue}>{history[key].valor},00</Text>
@@ -114,7 +114,7 @@ const stylesTable = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 40,
     borderColor: "lightgray",
-    marginBottom: 10,
+    marginBottom: 30,
     marginTop: 30,
   },
   row: {

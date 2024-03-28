@@ -25,12 +25,25 @@ const styles = StyleSheet.create({
         paddingEnd: '5%',
         marginTop: '20%',
     },
+    containerFormSignin: {
+      flex: 1,
+      backgroundColor: "#FFF",
+      paddingStart: '5%',
+      paddingEnd: '5%',
+      // marginTop: '20%',
+    },
     title: {
         fontSize: 20,
         color: "#65D8DA",
         fontWeight: "bold",
         marginTop: 28,
     },
+    subTitle: {
+      fontSize: 14,
+      color: "#65D8DA",
+      fontWeight: "bold",
+      marginTop: 5,
+  },
     input: {
         borderBottomWidth: 1,
         height: 40,

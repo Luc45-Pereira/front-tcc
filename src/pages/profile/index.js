@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, ScrollView, Text, TouchableOpacity, StyleSheet, TextInput } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import * as Animatable from 'react-native-animatable';
 import Header from '../../../components/Header';
 import { styles } from '../styles'; // Importe seus estilos aqui
 import { getUser } from '../../client/client';
 import BottomMenu from '../menu';
+import MaskInput, { Masks } from 'react-native-mask-input';
 
 
 
@@ -69,6 +70,8 @@ const UserProfileScreen = () => {
       const fetchUser = async () => {
         try {
           const User = await getUser();
+          console.log(User);
+          console.log(User.endereco.numero);
           setUserData(User);
         } catch (error) {
           console.error('Error fetching data:', error);
@@ -79,14 +82,57 @@ const UserProfileScreen = () => {
 
     return (
         <View style={styles.container } contentContainerStyle={{ flexGrow: 1 }}>
-            <Animatable.View delay={1000} animation="fadeInUp" style={styles.containerForm} >
-                <Text style={stylesProfile.userName}>{userData ? userData.nome : 'Carregando...'}</Text>
-                <Text style={stylesProfile.userEmail}>{userData ? userData.email : 'Carregando...'}</Text>
-                {/* Adicione mais informações do usuário conforme necessário */}
-                <TouchableOpacity style={stylesProfile.button} onPress={() => navigation.navigate('entrada')}>
-                    <Text style={stylesProfile.buttonText}>Cadastrar Entrada</Text>
-                </TouchableOpacity>
-            </Animatable.View>
+            <ScrollView style={styles.containerForm} >
+                <Animatable.View delay={1000} animation="fadeInUp" >
+                    <Text style={stylesProfile.userName}>{userData ? userData.nome : 'Carregando...'}</Text>
+                    <Text style={stylesProfile.userEmail}>{userData ? userData.email : 'Carregando...'}</Text>
+                    
+                    <Text style={styles.title}>CPF</Text>
+                    <TextInput
+                        style={styles.input}
+                        autoCorrect={false}
+                        editable={false}
+                        value={userData ? userData.cpf : 'Carregando...'}
+                        />
+                    <Text style={styles.title}>Data de Nascimento</Text>
+                    <MaskInput
+                        style={styles.input}
+                        placeholder="Digite sua data de nascimento ..."
+                        autoCorrect={false}
+                        value={userData ? userData.data_nascimento : 'Carregando...'}
+                        editable={false}
+                        mask={Masks.DATE_YYYYMMDD} />
+                    <Text style={styles.title}>Endereço</Text>
+                    <TextInput
+                        style={styles.input}
+                        autoCorrect={false}
+                        keyboardType="decimal-pad"
+                        editable={false}
+                        value={userData ? userData.endereco.rua : 'Carregando...'}
+                        />
+                    <Text style={styles.subTitle}>Numero</Text>
+                    <TextInput
+                        style={styles.input}
+                        editable={false}
+                        value={userData ? userData.endereco.numero.toString() : 'Carregando...'}
+                        />
+                    <Text style={styles.subTitle}>Estado</Text>
+                    <TextInput
+                        style={styles.input}
+                        autoCorrect={false}
+                        editable={false}
+                        value={userData ? userData.endereco.estado : 'Carregando...'}
+                        />
+                    <Text style={styles.subTitle}>Referencia</Text>
+                    <TextInput
+                        style={styles.input}
+                        autoCorrect={false}
+                        editable={false}
+                        value={userData ? userData.endereco.referencia : 'Carregando...'}
+                        />
+                </Animatable.View>
+            </ScrollView>
+            
             <BottomMenu />
         </View>
     );
