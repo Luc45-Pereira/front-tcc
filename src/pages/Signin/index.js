@@ -33,7 +33,7 @@ export default function Signin() {
             try {
                 let response = await getUser();
                 if (response) {
-                    navigation.navigate("dashboard");
+                    navigation.navigate("configProfile");
                 }
             } catch (error) {
                 console.log(error);

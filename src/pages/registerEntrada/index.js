@@ -42,7 +42,12 @@ export default function Register() {
         if (selectedOption === "saída") {
             response = await setSaida(valor, descricao, selectedIcon, detalhes);
         } else {
-            response = await setEntrada(valor, descricao, selectedIcon, detalhes);
+            console.log(valor);
+            // tranformar valor para float
+            let valorTranslate = valor.replace("R$", "").replace(",", ".");
+            valorTranslate = parseFloat(valorTranslate);
+            console.log(valorTranslate);
+            response = await setEntrada(valorTranslate, descricao, selectedIcon, detalhes);
         }
         if (response) {
             navigation.navigate("dashboard");
@@ -65,6 +70,7 @@ export default function Register() {
           },
           optionButton: {
             padding: 10,
+            width: "45%",
             borderWidth: 1,
             borderRadius: 5,
             borderColor: '#65D8DA',
@@ -84,23 +90,26 @@ export default function Register() {
         <View style={styles.container}>
             <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
                 <Animatable.View delay={1000} animation="fadeInUp" style={styles.containerForm} >
-                    <Text style={styles.title}>Valor</Text>
-                    <TextInput
+                    <Text style={styles.title}>Valor*</Text>
+                    <MaskInput
                         style={styles.input}
                         placeholder="Digite um valor..."
                         autoCorrect={false}
                         keyboardType="decimal-pad"
                         value={valor}
-                        onChangeText={Valor}/>
-                    <Text style={styles.title}>Tipo</Text>
-                    <TouchableOpacity onPress={selectEntrada} style={[stylesOptions.optionButton, selectedOption === 'entrada' && stylesOptions.selectedOption]}>
-                        <Text style={stylesOptions.optionText}>Entrada</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={selectSaida} style={[stylesOptions.optionButton, selectedOption === 'saída' && stylesOptions.selectedOption]}>
-                        <Text style={stylesOptions.optionText}>Saída</Text>
-                    </TouchableOpacity>
+                        onChangeText={Valor}
+                        mask={Masks.BRL_CURRENCY}/>
+                    <Text style={styles.title}>Tipo*</Text>
+                    <View style={stylesOptions.container}>
+                        <TouchableOpacity onPress={selectEntrada} style={[stylesOptions.optionButton, selectedOption === 'entrada' && stylesOptions.selectedOption]}>
+                            <Text style={stylesOptions.optionText}>Entrada</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={selectSaida} style={[stylesOptions.optionButton, selectedOption === 'saída' && stylesOptions.selectedOption]}>
+                            <Text style={stylesOptions.optionText}>Saída</Text>
+                        </TouchableOpacity>
+                    </View>
 
-                    <Text style={styles.title}>Descrição</Text>
+                    <Text style={styles.title}>Descrição*</Text>
                     <TextInput
                         style={styles.input}
                         placeholder="Digite uma descrição..."

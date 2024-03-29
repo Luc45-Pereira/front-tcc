@@ -18,8 +18,8 @@ const BottomMenu = () => {
         <TouchableOpacity onPress={() => navigation.navigate('dashboard')} style={styles.menuItem}>
             <EntypoIcon name="bar-graph" size={30} color={ currentScreen === 'dashboard' ? '#65D8DA': '#b5b3b3' } />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('profile')} style={styles.menuItem}>
-            <OcticonsIcon name="person" size={30} color={ currentScreen === 'profile' ? '#65D8DA': '#b5b3b3' } />
+        <TouchableOpacity onPress={() => navigation.navigate('configProfile')} style={styles.menuItem}>
+            <OcticonsIcon name="person" size={30} color={ currentScreen === 'configProfile' ? '#65D8DA': '#b5b3b3' } />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate('entrada')} style={styles.menuItem}>
             <FontAwesomeIcon name="money-check-alt" size={30} color={ currentScreen === 'entrada' ? '#65D8DA': '#b5b3b3' } />
