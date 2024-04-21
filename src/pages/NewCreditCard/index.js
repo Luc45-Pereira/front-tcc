@@ -6,8 +6,7 @@ import BottomMenu from '../menu';
 import Card from './Components/Card';
 import Option from '../ConfigProfile/components/option'
 
-const newCreditCard = () => {
-    console.log(Card.limit);
+const NewCreditCard = () => {
   return (
     <View style={styles.container}>
       <ScrollView
@@ -24,4 +23,4 @@ const newCreditCard = () => {
   );
 };
 
-export default newCreditCard;
+export default NewCreditCard;
