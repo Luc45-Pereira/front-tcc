@@ -27,13 +27,13 @@ export default function Signin() {
     }
 
     const login = async () => {
-        const userData = await AsyncStorage.getItem('userData');
 
+        const userData = await AsyncStorage.getItem('userData');
         if (userData) {
             try {
                 let response = await getUser();
                 if (response) {
-                    navigation.navigate("configProfile");
+                    navigation.navigate("dashboard");
                 }
             } catch (error) {
                 console.log(error);

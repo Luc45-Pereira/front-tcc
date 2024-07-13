@@ -24,8 +24,8 @@ const BottomMenu = () => {
         <TouchableOpacity onPress={() => navigation.navigate('entrada')} style={styles.menuItem}>
             <FontAwesomeIcon name="money-check-alt" size={30} color={ currentScreen === 'entrada' ? '#65D8DA': '#b5b3b3' } />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('Screen2')} style={styles.menuItem}>
-            <EntypoIcon name="credit-card" size={30} color={ currentScreen === 'Screen2' ? '#65D8DA': '#b5b3b3' } />
+        <TouchableOpacity onPress={() => navigation.navigate('Accounts')} style={styles.menuItem}>
+            <EntypoIcon name="credit-card" size={30} color={ currentScreen === 'Accounts' ? '#65D8DA': '#b5b3b3' } />
         </TouchableOpacity>
         </View>
     );

@@ -8,6 +8,9 @@ import RegisterEntrada from "../pages/registerEntrada";
 import UserProfileScreen from "../pages/profile";
 import ConfigProfile from "../pages/ConfigProfile";
 import NewCreditCard from "../pages/NewCreditCard";
+import Accounts from "../pages/Accounts"
+import RegisterAccount from "../pages/RegisterAccount";
+import AccountExist from "../pages/AccountExist";
 
 const Stack = createNativeStackNavigator();
 
@@ -22,6 +25,9 @@ export default function AuthRoutes() {
             <Stack.Screen name="profile" component={UserProfileScreen} options={{headerShown: false}}/>
             <Stack.Screen name="configProfile" component={ConfigProfile} options={{headerShown: false}}/>
             <Stack.Screen name="newCreditCard" component={NewCreditCard} options={{headerShown: false}}/>
+            <Stack.Screen name="Accounts" component={Accounts} options={{headerShown: false}}/>
+            <Stack.Screen name="RegisterAccount" component={RegisterAccount} options={{headerShown: false}}/>
+            <Stack.Screen name="AccountExist" component={AccountExist} options={{headerShown: false}}/>
         </Stack.Navigator>
     );
 }

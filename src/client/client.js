@@ -1,237 +1,151 @@
+import React, { useEffect, useState } from 'react';
+import { View, Text, Button } from 'react-native';
+import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { format, parseISO } from 'date-fns';
 
-const endpoint = 'http://34.85.214.156';
+const endpoint = 'http://127.0.0.1:8000';
 
-async function toLogin(login, password) {
+// Utility functions for AsyncStorage
+const saveUserData = async (data) => {
     try {
-        const url = `${endpoint}/user/login?login=${encodeURIComponent(login)}&password=${encodeURIComponent(password)}`;
-        const response = await fetch(url, {
-            method: 'POST', // Pode ser 'GET' se o servidor esperar um GET
-            headers: {
-                'Content-Type': 'application/json',
-                'accept': 'application/json'
-            },
-            // Não é necessário o corpo do JSON nesta configuração
-        });
-        
+        await AsyncStorage.setItem('userData', JSON.stringify(data));
+    } catch (error) {
+        console.error('Error saving user data', error);
+    }
+};
 
-        if (!response.ok) {
-            throw new Error('Network response not OK');
-        }
+const getUserData = async () => {
+    try {
+        const userData = await AsyncStorage.getItem('userData');
+        return userData ? JSON.parse(userData) : null;
+    } catch (error) {
+        console.error('Error retrieving user data', error);
+        return null;
+    }
+};
 
-        const json = await response.json();
-        
-        
-        if (json.status === "success") {
-            // Save the response data to AsyncStorage for later use
-            await AsyncStorage.setItem('userData', JSON.stringify(json));
+// Authentication API functions
+const toLogin = async (login, password) => {
+    try {
+        const response = await axios.post(`${endpoint}/user/login?login=${login}&password=${password}`);
+
+        if (response.data.status === 'success') {
+            await saveUserData(response.data);
             return true;
         }
 
         return false;
-        
     } catch (error) {
-        // console.error(error);
+        console.error(error);
         return false;
     }
-}
+};
 
-async function toRegister(email, password, name, birthDate, cpf) {
+const toRegister = async (email, password, name, birthDate, cpf) => {
     try {
-        let birthDateArray = birthDate.split('/');
-        birthDate = `${birthDateArray[0]}-${birthDateArray[1]}-${birthDateArray[2]}`;
-        const url = `${endpoint}/user`;
-        const response = await fetch(url, {
-            method: 'POST', // Pode ser 'GET' se o servidor esperar um GET
-            headers: {
-                'Content-Type': 'application/json',
-                'accept': 'application/json'
-            },
-            body: JSON.stringify({
-                "nome": name,
-                "email": email,
-                "senha": password,
-                "cpf": cpf,
-                "data_nascimento": birthDate,
-                "id_endereco": null
-            })
+        const formattedBirthDate = birthDate.split('/').reverse().join('-');
+        await axios.post(`${endpoint}/user`, {
+            nome: name,
+            email,
+            senha: password,
+            cpf: cpf,
+            data_nascimento: formattedBirthDate,
+            id_endereco: null,
         });
-        
-
-        if (!response.ok) {
-            throw new Error('Network response not OK');
-        }
-
-        const json = await response.json();
-        
 
         return true;
     } catch (error) {
         console.error(error);
         return false;
     }
-}
+};
 
-async function setEntrada(valor, descricao, tag="", detalhes="") {
+const setEntrada = async (valor, descricao, tag = "", detalhes = "") => {
     try {
-        const userData = await AsyncStorage.getItem('userData');
-        const user = JSON.parse(userData);
-        const url = `http://34.85.214.156/entrada/?access_token=${user.token}`;
+        const user = await getUserData();
+        if (!user) {
+            console.error('User data not found');
+            return false;
+        }
+
         const dataAtual = new Date();
+        const formattedDate = `${dataAtual.getFullYear()}-${String(dataAtual.getMonth() + 1).padStart(2, '0')}-${String(dataAtual.getDate()).padStart(2, '0')}`;
 
-        // Obtenha o ano, mês e dia da data atual
-        const ano = dataAtual.getFullYear();
-        const mes = String(dataAtual.getMonth() + 1).padStart(2, '0'); // Adiciona um zero à esquerda se o mês for menor que 10
-        const dia = String(dataAtual.getDate()).padStart(2, '0'); 
-        const response = await fetch(url, {
-            method: 'POST', // Pode ser 'GET' se o servidor esperar um GET
+        const payload = {
+            descricao,
+            id_usuario: user.id,
+            valor,
+            criado_em: formattedDate,
+            tag,
+            detalhes,
+            id_cartao: null,
+        };
+
+        console.log('Sending payload:', payload);
+
+        const response = await axios.post(`${endpoint}/entrada/?access_token=${user.token}`, payload, {
             headers: {
                 'Content-Type': 'application/json',
-                'accept': 'application/json'
             },
-            redirect: 'manual',
-            body: JSON.stringify({
-                "descricao": descricao,
-                "id_usuario": user.id,
-                "valor": valor,
-                "criado_em": `${ano}-${mes}-${dia}`,
-                "tag": tag,
-                "detalhes": detalhes
-            })
         });
-        
 
-        if (!response.ok) {
-            throw new Error('Network response not OK');
-        }
-
-        const json = await response.json();
-        
+        console.log('Response:', response.data);
 
         return true;
     } catch (error) {
-        console.error(error);
+        if (error.response) {
+            // The request was made and the server responded with a status code
+            // that falls out of the range of 2xx
+            console.error('Response data:', error.response.data);
+            console.error('Response status:', error.response.status);
+            console.error('Response headers:', error.response.headers);
+        } else if (error.request) {
+            // The request was made but no response was received
+            console.error('Request data:', error.request);
+        } else {
+            // Something happened in setting up the request that triggered an Error
+            console.error('Error message:', error.message);
+        }
+        console.error('Error config:', error.config);
         return false;
     }
-}
+};
 
 
-async function setSaida(valor, descricao, tag="", detalhes="") {
+const getEntradas = async () => {
     try {
-        const userData = await AsyncStorage.getItem('userData');
-        const user = JSON.parse(userData);
-        const url = `http://34.85.214.156/saida/?access_token=${user.token}`;
-        const dataAtual = new Date();
+        const user = await getUserData();
+        const { data: entradas } = await axios.get(`${endpoint}/entrada/entradas/${user.id}?access_token=${user.token}`);
+        const { data: saidas } = await axios.get(`${endpoint}/saida/saidas/${user.id}?access_token=${user.token}`);
 
-        // Obtenha o ano, mês e dia da data atual
-        const ano = dataAtual.getFullYear();
-        const mes = String(dataAtual.getMonth() + 1).padStart(2, '0'); // Adiciona um zero à esquerda se o mês for menor que 10
-        const dia = String(dataAtual.getDate()).padStart(2, '0'); 
-        const response = await fetch(url, {
-            method: 'POST', // Pode ser 'GET' se o servidor esperar um GET
-            headers: {
-                'Content-Type': 'application/json',
-                'accept': 'application/json'
-            },
-            redirect: 'manual',
-            body: JSON.stringify({
-                "descricao": descricao,
-                "id_usuario": user.id,
-                "valor": valor,
-                "criado_em": `${ano}-${mes}-${dia}`,
-                "tag": tag,
-                "detalhes": detalhes
-            })
-        });
-        
+        const totalEntrada = entradas.reduce((total, entrada) => total + entrada.valor, 0);
+        const totalSaida = saidas.reduce((total, saida) => total + saida.valor, 0);
 
-        if (!response.ok) {
-            throw new Error('Network response not OK');
-        }
-
-        const json = await response.json();
-        
-
-        return true;
+        return totalEntrada - totalSaida;
     } catch (error) {
-        console.error(error);
+        if (error.response) {
+            // The request was made and the server responded with a status code
+            // that falls out of the range of 2xx
+            console.error('Response data:', error.response.data);
+            console.error('Response status:', error.response.status);
+            console.error('Response headers:', error.response.headers);
+        } else if (error.request) {
+            // The request was made but no response was received
+            console.error('Request data:', error.request);
+        } else {
+            // Something happened in setting up the request that triggered an Error
+            console.error('Error message:', error.message);
+        }
+        console.error('Error config:', error.config);
         return false;
     }
-}
+};
 
-async function getEntradas() {
+const getEntradasChart = async () => {
     try {
-        const userData = await AsyncStorage.getItem('userData');
-        const user = JSON.parse(userData);
-        const url = `${endpoint}/entrada/entradas/${user.id}?access_token=${user.token}`;
-        const response = await fetch(url, {
-            method: 'GET', // Pode ser 'GET' se o servidor esperar um GET
-            headers: {
-                'Content-Type': 'application/json',
-                'accept': 'application/json'
-            }
-        });
-
-        if (!response.ok) {
-            throw new Error('Network response not OK');
-        }
-
-        const entrada = await response.json();
-        
-        const url1 = `${endpoint}/saida/saidas/${user.id}?access_token=${user.token}`;
-        const response1 = await fetch(url1, {
-            method: 'GET', // Pode ser 'GET' se o servidor esperar um GET
-            headers: {
-                'Content-Type': 'application/json',
-                'accept': 'application/json'
-            }
-        });
-
-        if (!response1.ok) {
-            throw new Error('Network response not OK');
-        }
-
-        const saida = await response1.json();
-
-        let total_entrada = 0;
-        entrada.forEach(element => {
-            total_entrada = total_entrada + element.valor;
-        });
-
-
-        let total_saida = 0;
-        saida.forEach(element => {
-            total_saida = total_saida + element.valor;
-        });
-
-        let total = total_entrada - total_saida;
-
-        return total;
-    } catch (error) {
-        console.error(error);
-        return false;
-    }
-}
-
-async function getEntradasChart() {
-    try {
-        const userData = await AsyncStorage.getItem('userData');
-        const user = JSON.parse(userData);
-        const url = `${endpoint}/entrada/entradas/${user.id}?access_token=${user.token}`;
-        const response = await fetch(url, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'accept': 'application/json'
-            }
-        });
-
-        if (!response.ok) {
-            throw new Error('Network response not OK');
-        }
-
-        const entrada = await response.json();
+        const user = await getUserData();
+        const { data: entrada } = await axios.get(`${endpoint}/entrada/entradas/${user.id}?access_token=${user.token}`);
 
         if (!entrada || !Array.isArray(entrada)) {
             throw new Error('Invalid data received');
@@ -260,55 +174,64 @@ async function getEntradasChart() {
         console.error(error);
         return false;
     }
-}
+};
 
-async function getHistoricoDeEntradas() {
+// Exits API functions
+const setSaida = async (valor, descricao, tag = "", detalhes = "") => {
     try {
-        const userData = await AsyncStorage.getItem('userData');
-        const user = JSON.parse(userData);
-        const url = `${endpoint}/entrada/entradas/${user.id}?access_token=${user.token}`;
-        const response = await fetch(url, {
-            method: 'GET', // Pode ser 'GET' se o servidor esperar um GET
-            headers: {
-                'Content-Type': 'application/json',
-                'accept': 'application/json'
-            }
+        const user = await getUserData();
+        const dataAtual = new Date();
+        const formattedDate = `${dataAtual.getFullYear()}-${String(dataAtual.getMonth() + 1).padStart(2, '0')}-${String(dataAtual.getDate()).padStart(2, '0')}`;
+
+        await axios.post(`${endpoint}/saida/?access_token=${user.token}`, {
+            descricao,
+            id_usuario: user.id,
+            valor,
+            criado_em: formattedDate,
+            tag,
+            detalhes,
+            id_cartao: null,
         });
 
-        if (!response.ok) {
-            throw new Error('Network response not OK');
+        return true;
+    } catch (error) {
+        if (error.response) {
+            // The request was made and the server responded with a status code
+            // that falls out of the range of 2xx
+            console.error('Response data:', error.response.data);
+            console.error('Response status:', error.response.status);
+            console.error('Response headers:', error.response.headers);
+        } else if (error.request) {
+            // The request was made but no response was received
+            console.error('Request data:', error.request);
+        } else {
+            // Something happened in setting up the request that triggered an Error
+            console.error('Error message:', error.message);
         }
+        console.error('Error config:', error.config);
+        return false;
+    }
+};
 
-        const entrada = await response.json();
+const getHistoricoDeEntradas = async () => {
+    try {
+        const user = await getUserData();
+        const { data: entradas } = await axios.get(`${endpoint}/entrada/entradas/${user.id}?access_token=${user.token}`);
+        const { data: saidas } = await axios.get(`${endpoint}/saida/saidas/${user.id}?access_token=${user.token}`);
 
-        const url1 = `${endpoint}/saida/saidas/${user.id}?access_token=${user.token}`;
-        const response1 = await fetch(url1, {
-            method: 'GET', // Pode ser 'GET' se o servidor esperar um GET
-            headers: {
-                'Content-Type': 'application/json',
-                'accept': 'application/json'
-            }
-        });
-
-        if (!response1.ok) {
-            throw new Error('Network response not OK');
-        }
-
-        const saida = await response1.json();
-
-        let entradasDoMes = entrada.filter(entrada => {
+        const entradasDoMes = entradas.filter(entrada => {
             const data = new Date(entrada.criado_em);
             const dataAtual = new Date();
             return data.getMonth() === dataAtual.getMonth() && data.getFullYear() === dataAtual.getFullYear();
         });
 
-        let saidasDoMes = saida.filter(saida => {
+        const saidasDoMes = saidas.filter(saida => {
             const data = new Date(saida.criado_em);
             const dataAtual = new Date();
             return data.getMonth() === dataAtual.getMonth() && data.getFullYear() === dataAtual.getFullYear();
         });
 
-        let valoresMensal = entradasDoMes.concat(saidasDoMes);
+        const valoresMensal = entradasDoMes.concat(saidasDoMes);
 
         console.log(valoresMensal);
         return valoresMensal;
@@ -316,104 +239,182 @@ async function getHistoricoDeEntradas() {
         console.error(error);
         return false;
     }
-}
+};
 
-async function getUser() {
+// User API functions
+const getUser = async () => {
     try {
-        const userData = await AsyncStorage.getItem('userData');
-        if (!userData) {
+        const user = await getUserData();
+        if (!user) {
             return false;
         }
-        const user = JSON.parse(userData);
-        const url = `${endpoint}/user/${user.id}?access_token=${user.token}`;
-        const response = await fetch(url, {
-            method: 'GET', // Pode ser 'GET' se o servidor esperar um GET
-            headers: {
-                'Content-Type': 'application/json',
-                'accept': 'application/json'
-            }
-        });
-
-        if (!response.ok) {
-            throw new Error('Network response not OK');
-        }
-        return await response.json();
-
-
-
-       
+        const response = await axios.get(`${endpoint}/user/${user.id}?access_token=${user.token}`);
+        return response.data;
     } catch (error) {
-        // console.error(error);
+        console.error(error);
         return false;
     }
-}
+};
 
-async function getSaidasMensal() {
+// Monthly Exits and Entries API functions
+const getSaidasMensal = async () => {
     try {
-        const userData = await AsyncStorage.getItem('userData');
-        const user = JSON.parse(userData);
-        const url = `${endpoint}/saida/saidas/${user.id}?access_token=${user.token}`;
-        const response = await fetch(url, {
-            method: 'GET', // Pode ser 'GET' se o servidor esperar um GET
-            headers: {
-                'Content-Type': 'application/json',
-                'accept': 'application/json'
-            }
-        });
+        const user = await getUserData();
+        const { data: saidas } = await axios.get(`${endpoint}/saida/saidas/${user.id}?access_token=${user.token}`);
 
-        if (!response.ok) {
-            throw new Error('Network response not OK');
-        }
-
-        const saidas = await response.json();
-
-        let saidasDoMes = saidas.filter(saida => {
+        const saidasDoMes = saidas.filter(saida => {
             const data = new Date(saida.criado_em);
             const dataAtual = new Date();
             return data.getMonth() === dataAtual.getMonth() && data.getFullYear() === dataAtual.getFullYear();
         });
 
-        let totalDespesas = saidasDoMes.reduce((acc, saida) => acc + saida.valor, 0);
+        const totalDespesas = saidasDoMes.reduce((acc, saida) => acc + saida.valor, 0);
 
         return totalDespesas;
     } catch (error) {
         console.error(error);
         return false;
     }
-}
+};
 
-async function getEntradasMensal() {
+const getEntradasMensal = async () => {
     try {
-        const userData = await AsyncStorage.getItem('userData');
-        const user = JSON.parse(userData);
-        const url = `${endpoint}/entrada/entradas/${user.id}?access_token=${user.token}`;
-        const response = await fetch(url, {
-            method: 'GET', // Pode ser 'GET' se o servidor esperar um GET
-            headers: {
-                'Content-Type': 'application/json',
-                'accept': 'application/json'
-            }
-        });
+        const user = await getUserData();
+        const { data: entradas } = await axios.get(`${endpoint}/entrada/entradas/${user.id}?access_token=${user.token}`);
 
-        if (!response.ok) {
-            throw new Error('Network response not OK');
-        }
-
-        const entradas = await response.json();
-
-        let entradasDoMes = entradas.filter(saida => {
-            const data = new Date(saida.criado_em);
+        const entradasDoMes = entradas.filter(entrada => {
+            const data = new Date(entrada.criado_em);
             const dataAtual = new Date();
             return data.getMonth() === dataAtual.getMonth() && data.getFullYear() === dataAtual.getFullYear();
         });
 
-        let totalEntradas = entradasDoMes.reduce((acc, saida) => acc + saida.valor, 0);
+        const totalEntradas = entradasDoMes.reduce((acc, entrada) => acc + entrada.valor, 0);
 
         return totalEntradas;
     } catch (error) {
         console.error(error);
         return false;
     }
-}
+};
 
-export { toLogin, toRegister, getEntradas, setEntrada, getHistoricoDeEntradas, getEntradasChart, getUser, getSaidasMensal, getEntradasMensal, setSaida };
+const getCartoesUsuario = async () => {
+    try {
+        const user = await getUserData();
+        const cartoes = await axios.get(`${endpoint}/cartao/?access_token=${user.token}`);
+
+        console.log(cartoes);
+
+        return cartoes.data;
+    } catch (error) {
+        console.error(error);
+        return false;
+    }
+};
+
+const getTransactionsFromAccount = async () => {
+    try {
+        const TransactionsAccountsUser = await AsyncStorage.getItem('TransactionsAccountsUser');
+        if (TransactionsAccountsUser) {
+            return TransactionsAccountsUser;
+        }
+
+        const userData = await getUserData();
+        const response = await axios.get(`${endpoint}/transactions/?access_token=${userData.token}`);
+        console.log('Response:', response.data);
+
+        await AsyncStorage.setItem('TransactionsAccountsUser', JSON.stringify(response.data));
+
+        return response.data;
+    } catch (error) {
+        console.error(error);
+        return false;
+    }
+};
+
+const getAccountExist = async (userData) => {
+    try {
+        const AccountsUser = await AsyncStorage.getItem('AccountsUser');
+        if (AccountsUser) {
+            return AccountsUser;
+        }
+
+        const userData = await getUserData();
+        const response = await axios.get(`${endpoint}/transactions/accounts?access_token=${userData.token}`);
+        console.log('Response:', response.data);
+
+        await AsyncStorage.setItem('AccountsUser', JSON.stringify(response.data));
+
+        return response.data;
+    } catch (error) {
+        console.error(error);
+        return false;
+    }
+};
+
+
+const createAccountPluggy = async (userData) => {
+    try {
+        const body = {};
+        const response = await axios.get(`${endpoint}/pluggy/connectors/200?access_token=${userData.token}`, body);
+        console.log('Response:', response.data);
+
+        await AsyncStorage.setItem('connectorCreatedData', JSON.stringify(response.data));
+
+        return true;
+    } catch (error) {
+        console.error(error);
+        return false;
+    }
+};
+
+
+const getCamposToRegister = async (connectorId) => {
+    try {
+        const userData = await getUserData();
+
+        if (connectorId == 200)
+        {
+            createAccountPluggy(userData);
+            return [];
+        }
+
+        const response = await axios.get(`${endpoint}/pluggy/connectors?access_token=${userData.token}`);
+
+        
+        const results = response.data.results;
+        const campos = [];
+
+        results.forEach(async (connector) => {
+            console.log('Connector:', connector.id, 'ConnectorId:', connectorId);
+
+            if (connector.id == connectorId) {
+                
+                console.log('Connector:', connector);
+                campos.push(connector.credentials);
+            }
+        });
+        console.log('Campos:', campos);
+        return campos;
+        
+    } catch (error) {
+        if (error.response) {
+            // The request was made and the server responded with a status code
+            // that falls out of the range of 2xx
+            console.error('Response data:', error.response.data);
+            console.error('Response status:', error.response.status);
+            console.error('Response headers:', error.response.headers);
+        } else if (error.request) {
+            // The request was made but no response was received
+            console.error('Request data:', error.request);
+        } else {
+            // Something happened in setting up the request that triggered an Error
+            console.error('Error message:', error.message);
+        }
+        console.error('Error config:', error.config);
+        return false;
+    }
+
+
+};
+
+export { toLogin, getAccountExist, getTransactionsFromAccount, getCamposToRegister, toRegister, getCartoesUsuario, getEntradas, setEntrada, getHistoricoDeEntradas, getEntradasChart, getUser, getSaidasMensal, getEntradasMensal, setSaida };
