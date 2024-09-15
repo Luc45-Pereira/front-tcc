@@ -40,7 +40,10 @@ export default function Register() {
     const handleRegister = async () => {
         let response;
         if (selectedOption === "saída") {
-            response = await setSaida(valor, descricao, selectedIcon, detalhes);
+            let valorTranslate = valor.replace("R$", "").replace(",", ".");
+            valorTranslate = parseFloat(valorTranslate);
+            console.log(valorTranslate);
+            response = await setSaida(valorTranslate, descricao, selectedIcon, detalhes);
         } else {
             console.log(valor);
             // tranformar valor para float
@@ -50,7 +53,10 @@ export default function Register() {
             response = await setEntrada(valorTranslate, descricao, selectedIcon, detalhes);
         }
         if (response) {
-            navigation.navigate("dashboard");
+            navigation.reset({
+                index: 0,
+                routes: [{ name: 'dashboard' }],
+            });
         }
     }
 

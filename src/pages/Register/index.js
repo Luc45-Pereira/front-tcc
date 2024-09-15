@@ -27,11 +27,7 @@ export default function Register() {
     }
 
     return (
-        <ScrollView style={styles.container} contentContainerStyle={{ flexGrow: 1 }}>
-            <Animatable.View delay={1000} animation="fadeInLeft" style={styles.containerHeader} >
-                <Text style={styles.message}>Register</Text>
-            </Animatable.View>
-
+        <ScrollView style={styles.container} contentContainerStyle={{ flexGrow: 0 }}>
             <Animatable.View delay={1000} animation="fadeInUp" style={styles.containerForm}>
                 <Text style={styles.title}>Nome</Text>
                 <TextInput
@@ -82,7 +78,7 @@ export default function Register() {
                     autoCorrect={false}
                     value={dataNascimento}
                     onChangeText={setDataNascimento}
-                    mask={Masks.DATE_YYYYMMDD} />
+                    mask={Masks.DATE_DDMMYYYY} />
                 <Text style={styles.title}>CPF</Text>
                 <TextInput
                     style={styles.input}

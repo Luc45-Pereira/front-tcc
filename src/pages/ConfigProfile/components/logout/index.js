@@ -52,9 +52,14 @@ const Logout = () => {
 
         if (userData) {
             await AsyncStorage.removeItem('userData');
+            await AsyncStorage.clear();
         }
 
-        navigation.navigate('SignIn');
+         // Reseta a navegação para a tela de login
+            navigation.reset({
+                index: 0,
+                routes: [{ name: 'SignIn' }],
+            });
     }
 
     return (

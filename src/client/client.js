@@ -231,7 +231,14 @@ const getHistoricoDeEntradas = async () => {
             return data.getMonth() === dataAtual.getMonth() && data.getFullYear() === dataAtual.getFullYear();
         });
 
-        const valoresMensal = entradasDoMes.concat(saidasDoMes);
+        const saidasDoMesFormatadas = saidasDoMes.map(saida => ({
+            ...saida,
+            valor: -saida.valor,
+        }));
+
+        const valoresMensal = entradasDoMes.concat(saidasDoMesFormatadas);
+
+        valoresMensal.sort((a, b) => new Date(b.criado_em) - new Date(a.criado_em));
 
         console.log(valoresMensal);
         return valoresMensal;

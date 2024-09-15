@@ -12,9 +12,8 @@ const InstitutionItem = ({ institution }) => {
     await AsyncStorage.setItem('institutionToRegister', institution.id);
     await AsyncStorage.setItem('institutionToRegisterLogo', institution.path);
 
-    if (institution.name === 'Pluggy') {
-      navigation.navigate('RegisterAccount');
-    }
+    navigation.navigate('RegisterAccount');
+    
   }
   
 
