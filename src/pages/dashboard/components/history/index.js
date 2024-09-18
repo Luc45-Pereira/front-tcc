@@ -34,6 +34,11 @@ const History = () => {
     setRefreshing(false);
   };
 
+  const handleEdit = (key) => {
+    // Aqui você pode navegar para uma tela de edição passando os detalhes da transação
+    navigation.navigate('entrada', { transaction: history[key] });
+  };
+
   return (
     <ScrollView style={styles.container} refreshControl={
       <RefreshControl
@@ -58,8 +63,11 @@ const History = () => {
               <Text style={stylesTable.transactionDescription}>{ history[key].descricao.length <= 15 ? history[key].descricao : history[key].descricao.substring(0, 15) + '...' }</Text>
             </View>
             <View style={stylesTable.transactionDetails}>
-              <Text style={stylesTable.transactionValue}>{history[key].valor},00</Text>
+              <Text style={stylesTable.transactionValue}>{Number(history[key].valor).toFixed(2)}</Text>
               <Text style={stylesTable.transactionDate}>{history[key].criado_em}</Text>
+              <TouchableOpacity style={stylesTable.editButton} onPress={() => handleEdit(key)}>
+                <Icon name="pencil" size={24} color="#6f59f0" />
+              </TouchableOpacity>
             </View>
           </View>
         ))}
@@ -124,8 +132,6 @@ const stylesTable = StyleSheet.create({
     backgroundColor: "#fff",
     paddingHorizontal: 20,
     paddingVertical: 15,
-    // borderBottomWidth: 1,
-    // borderBottomColor: "#ccc",
   },
   transactionInfo: {
     flexDirection: 'row',
@@ -148,6 +154,12 @@ const stylesTable = StyleSheet.create({
   transactionDate: {
     fontSize: 16,
     color: 'lightgray',
+  },
+  editButton: {
+    marginLeft: 1,
+    padding: 2,
+    backgroundColor: '#FFF',
+    borderRadius: 8,
   },
 });
 

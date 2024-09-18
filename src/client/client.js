@@ -42,6 +42,63 @@ const toLogin = async (login, password) => {
     }
 };
 
+const updateTransaction = async (Transaction, entrada = true) => {
+    try {
+        const user = await getUserData();
+        if (!user) {
+            console.error('User data not found');
+            return false;
+        }
+
+        let endpointPut = '';
+        if (entrada) {
+            endpointPut = '/entrada/update/';
+        } else {
+            endpointPut = '/saida/update/';
+        }
+
+        let payload = {
+            descricao: Transaction.descricao,
+            id_usuario: user.id,
+            valor: Transaction.valor,
+            criado_em: Transaction.criado_em,
+            tag: Transaction.tag,
+            detalhes: Transaction.detalhes,
+            id_cartao: null,
+        };
+
+        console.log('Transaction:', Transaction);
+        console.log('Sending payload:', payload);
+
+
+        const response = await axios.put(`${endpoint}${endpointPut}${Transaction.id}?access_token=${user.token}`, payload, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        console.log('Response:', response.data);
+
+        return true;
+    } catch (error) {
+        if (error.response) {
+            // The request was made and the server responded with a status code
+            // that falls out of the range of 2xx
+            console.error('Response data:', error.response.data);
+            console.error('Response status:', error.response.status);
+            console.error('Response headers:', error.response.headers);
+        } else if (error.request) {
+            // The request was made but no response was received
+            console.error('Request data:', error.request);
+        } else {
+            // Something happened in setting up the request that triggered an Error
+            console.error('Error message:', error.message);
+        }
+        console.error('Error config:', error.config);
+        return false;
+    }
+}
+
 const toRegister = async (email, password, name, birthDate, cpf) => {
     try {
         const formattedBirthDate = birthDate.split('/').reverse().join('-');
@@ -234,9 +291,15 @@ const getHistoricoDeEntradas = async () => {
         const saidasDoMesFormatadas = saidasDoMes.map(saida => ({
             ...saida,
             valor: -saida.valor,
+            type: 'saida',
         }));
 
-        const valoresMensal = entradasDoMes.concat(saidasDoMesFormatadas);
+        const entradasDoMesFormatada = entradasDoMes.map(entrada => ({
+            ...entrada,
+            type: 'entrada',
+        }));
+
+        const valoresMensal = entradasDoMesFormatada.concat(saidasDoMesFormatadas);
 
         valoresMensal.sort((a, b) => new Date(b.criado_em) - new Date(a.criado_em));
 
@@ -424,4 +487,4 @@ const getCamposToRegister = async (connectorId) => {
 
 };
 
-export { toLogin, getAccountExist, getTransactionsFromAccount, getCamposToRegister, toRegister, getCartoesUsuario, getEntradas, setEntrada, getHistoricoDeEntradas, getEntradasChart, getUser, getSaidasMensal, getEntradasMensal, setSaida };
+export { toLogin, updateTransaction, getAccountExist, getTransactionsFromAccount, getCamposToRegister, toRegister, getCartoesUsuario, getEntradas, setEntrada, getHistoricoDeEntradas, getEntradasChart, getUser, getSaidasMensal, getEntradasMensal, setSaida };

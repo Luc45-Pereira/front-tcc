@@ -1,64 +1,83 @@
 import ModalSelector from 'react-native-modal-selector';
-import React from "react";
-import { useState, useEffect } from 'react';
-import { View, Text, Picker, StyleSheet, TouchableOpacity, TextInput, ScrollView } from "react-native";
-
-import { useNavigation } from '@react-navigation/native';
-
+import React, { useState, useEffect } from "react";
+import { View, Text, TouchableOpacity, TextInput, ScrollView, StyleSheet } from "react-native";
+import { useNavigation, useRoute } from '@react-navigation/native'; // Import useRoute
 import * as Animatable from 'react-native-animatable';
-
-import MaskInput, {Masks} from 'react-native-mask-input';
+import MaskInput, { Masks } from 'react-native-mask-input';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-// import RNPickerSelect from 'react-native-picker-select';
-import {styles} from '../styles';
-
-
-import { setEntrada, setSaida } from '../../client/client';
+import { setEntrada, setSaida, updateTransaction } from '../../client/client'; // Assume que você tem uma função de update
 import Header from "../../../components/Header";
+import {styles} from '../styles';
 import BottomMenu from "../menu";
 
 export default function Register() {
-    const [descricao, Descricao] = useState("");
-    const [valor, Valor] = useState("");
-    const [tag, Tag] = useState("");
-    const [detalhes, Detalhes] = useState("");
+    const route = useRoute(); // Pegue os parâmetros da rota
+    const navigation = useNavigation();
+    
+    const [descricao, setDescricao] = useState("");
+    const [valor, setValor] = useState("");
+    const [tag, setTag] = useState("");
+    const [detalhes, setDetalhes] = useState("");
     const [selectedOption, setSelectedOption] = useState('entrada');
     const [selectedIcon, setSelectedIcon] = useState();
+    
+    // Verifica se está no modo de edição (se existe transação)
+    useEffect(() => {
+        if (route.params?.transaction) {
+            const { descricao, valor, tag, detalhes, type, icon } = route.params.transaction;
+
+            let tipo = type === 'entrada' ? 'entrada' : 'saida';
+
+            setDescricao(descricao);
+            setValor(Number(valor).toFixed(2));
+            setTag(tag);
+            setDetalhes(detalhes);
+            setSelectedOption(tipo); // 'entrada' ou 'saída'
+            setSelectedIcon(icon);
+        }
+    }, [route.params]);
 
     // Função para definir a opção como 'entrada'
-    const selectEntrada = () => {
-        setSelectedOption('entrada');
-    };
+    const selectEntrada = () => setSelectedOption('entrada');
 
     // Função para definir a opção como 'saída'
-    const selectSaida = () => {
-        setSelectedOption('saída');
-    };
-    
-    const navigation = useNavigation();
+    const selectSaida = () => setSelectedOption('saída');
 
     const handleRegister = async () => {
+        let valorTranslate = valor.replace("R$", "").replace(",", ".");
+        valorTranslate = parseFloat(valorTranslate);
+
         let response;
-        if (selectedOption === "saída") {
-            let valorTranslate = valor.replace("R$", "").replace(",", ".");
-            valorTranslate = parseFloat(valorTranslate);
-            console.log(valorTranslate);
-            response = await setSaida(valorTranslate, descricao, selectedIcon, detalhes);
+        if (route.params?.transaction) {
+            // Modo de edição
+            const updatedTransaction = {
+                ...route.params.transaction,
+                descricao,
+                valor: valorTranslate,
+                detalhes,
+                icon: selectedIcon,
+                tipo: selectedOption,
+            };
+
+            let type = (route.params.transaction.type === 'entrada') ? true : false;
+
+            response = await updateTransaction(updatedTransaction, type);
         } else {
-            console.log(valor);
-            // tranformar valor para float
-            let valorTranslate = valor.replace("R$", "").replace(",", ".");
-            valorTranslate = parseFloat(valorTranslate);
-            console.log(valorTranslate);
-            response = await setEntrada(valorTranslate, descricao, selectedIcon, detalhes);
+            // Modo de cadastro
+            if (selectedOption === "saída") {
+                response = await setSaida(valorTranslate, descricao, selectedIcon, detalhes);
+            } else {
+                response = await setEntrada(valorTranslate, descricao, selectedIcon, detalhes);
+            }
         }
+
         if (response) {
             navigation.reset({
                 index: 0,
                 routes: [{ name: 'dashboard' }],
             });
         }
-    }
+    };
 
     const iconOptions = [
         { label: 'Compra', key: 'shopping-outline' },
@@ -66,31 +85,6 @@ export default function Register() {
         { label: 'Transferência', key: 'bank-transfer' },
         // Adicione mais ícones conforme necessário
     ];
-
-    const stylesOptions = StyleSheet.create({
-        container: {
-            flexDirection: 'row',
-            justifyContent: 'center',
-            alignItems: 'center',
-            marginTop: 20,
-          },
-          optionButton: {
-            padding: 10,
-            width: "45%",
-            borderWidth: 1,
-            borderRadius: 5,
-            borderColor: '#65D8DA',
-            marginRight: 10,
-            marginTop: 10,
-          },
-          optionText: {
-            fontSize: 16,
-          },
-          selectedOption: {
-            backgroundColor: '#65D8DA',
-          },
-    });
-
 
     return (
         <View style={styles.container}>
@@ -103,14 +97,16 @@ export default function Register() {
                         autoCorrect={false}
                         keyboardType="decimal-pad"
                         value={valor}
-                        onChangeText={Valor}
-                        mask={Masks.BRL_CURRENCY}/>
+                        onChangeText={setValor}
+                        mask={Masks.BRL_CURRENCY}
+                    />
+                    
                     <Text style={styles.title}>Tipo*</Text>
                     <View style={stylesOptions.container}>
-                        <TouchableOpacity onPress={selectEntrada} style={[stylesOptions.optionButton, selectedOption === 'entrada' && stylesOptions.selectedOption]}>
+                        <TouchableOpacity onPress={(route.params?.transaction) ? '' : selectEntrada } style={[stylesOptions.optionButton, selectedOption === 'entrada' && stylesOptions.selectedOption]}>
                             <Text style={stylesOptions.optionText}>Entrada</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={selectSaida} style={[stylesOptions.optionButton, selectedOption === 'saída' && stylesOptions.selectedOption]}>
+                        <TouchableOpacity onPress={(route.params?.transaction) ? '' : selectSaida} style={[stylesOptions.optionButton, selectedOption === 'saída' && stylesOptions.selectedOption]}>
                             <Text style={stylesOptions.optionText}>Saída</Text>
                         </TouchableOpacity>
                     </View>
@@ -121,14 +117,10 @@ export default function Register() {
                         placeholder="Digite uma descrição..."
                         autoCorrect={false}
                         value={descricao}
-                        onChangeText={Descricao}/>
+                        onChangeText={setDescricao}
+                    />
+
                     <Text style={styles.title}>Tag</Text>
-                    {/* <TextInput
-                        style={styles.input}
-                        placeholder="Digite uma Tag..."
-                        autoCorrect={false}
-                        value={tag}
-                        onChangeText={Tag}/> */}
                     {selectedIcon && <Icon name={selectedIcon} size={30} />}
                     <ModalSelector
                         data={iconOptions}
@@ -136,19 +128,21 @@ export default function Register() {
                         onChange={(option) => setSelectedIcon(option.key)}
                         cancelText="Cancelar"
                     />
+                    
                     <Text style={styles.title}>Detalhes</Text>
                     <MaskInput
                         style={styles.input}
                         placeholder="Digite os detalhes..."
                         autoCorrect={false}
                         value={detalhes}
-                        onChangeText={Detalhes}
-                        />
+                        onChangeText={setDetalhes}
+                    />
                     
                     <TouchableOpacity style={styles.button} onPress={handleRegister}>
-                        <Text style={styles.buttonText}>Salvar</Text>
+                        <Text style={styles.buttonText}>
+                            {route.params?.transaction ? 'Atualizar' : 'Salvar'}
+                        </Text>
                     </TouchableOpacity>
-
                 </Animatable.View>
             </ScrollView>
             <BottomMenu />
@@ -156,3 +150,26 @@ export default function Register() {
     );
 }
 
+const stylesOptions = StyleSheet.create({
+    container: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 20,
+    },
+    optionButton: {
+        padding: 10,
+        width: "45%",
+        borderWidth: 1,
+        borderRadius: 5,
+        borderColor: '#65D8DA',
+        marginRight: 10,
+        marginTop: 10,
+    },
+    optionText: {
+        fontSize: 16,
+    },
+    selectedOption: {
+        backgroundColor: '#65D8DA',
+    },
+});
